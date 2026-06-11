@@ -2,6 +2,10 @@ import { printHelp } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
 import { youtube } from "/commands/youtube/youtube.js";
+import { duckduckgo } from "/commands/duckduckgo/duckduckgo.js";
+import { google } from "/commands/google/google.js";
+import { wikipedia } from "/commands/wikipedia/wikipedia.js";
+import { archwiki } from "/commands/archwiki/archwiki.js";
 import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
@@ -71,14 +75,38 @@ export const commandRegistry = [
     },
     {
         name: "reset",
-        aliases: ["reset", "resetstate"],
+        aliases: ["reset"],
         description: "restore persistent state to default and reload",
         command: resetPersistent,
     },
     {
         name: "youtube",
-        aliases: ["youtube", "yt", "y", "!y"],
+        aliases: ["youtube", "y", "!y"],
         description: "search YouTube for videos",
         command: youtube,
+    },
+    {
+        name: "duckduckgo",
+        aliases: ["duckduckgo", "d", "!d"],
+        description: "search DuckDuckGo for results",
+        command: duckduckgo,
+    },
+    {
+        name: "google",
+        aliases: ["google", "g", "!g"],
+        description: "search Google for results",
+        command: google,
+    },
+    {
+        name: "wikipedia",
+        aliases: ["wikipedia", "w", "!w"],
+        description: "search Wikipedia for results",
+        command: wikipedia,
+    },
+    {
+        name: "archlinux wiki",
+        aliases: ["archwiki", "a", "!a"],
+        description: "search ArchWiki for results",
+        command: archwiki,
     },
 ];
