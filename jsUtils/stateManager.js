@@ -1,7 +1,9 @@
 import { loadJson } from "/jsUtils/jsonUtil.js";
 
 const STORAGE_KEY = "app_state";
-let _state = null;
+let _persistent = null; // persisted state (saved to localStorage)
+let _runtime = {}; // transient runtime-only values
+let _stateFacade = null; // lightweight facade with getters for top-level props
 
 function isObject(o) {
     return o && typeof o === "object" && !Array.isArray(o);
@@ -23,23 +25,72 @@ export async function initState() {
     if (stored) {
         try {
             const overrides = JSON.parse(stored);
-            _state = deepMerge(defaultState, overrides);
+            _persistent = deepMerge(defaultState, overrides);
         } catch (err) {
             console.error("Failed to parse stored state, using default:", err);
-            _state = JSON.parse(JSON.stringify(defaultState));
+            _persistent = JSON.parse(JSON.stringify(defaultState));
         }
     } else {
-        _state = JSON.parse(JSON.stringify(defaultState));
+        _persistent = JSON.parse(JSON.stringify(defaultState));
     }
+    _runtime = {};
+    _stateFacade = null;
+}
+function ensureFacadeProp(prop) {
+    if (!_stateFacade) _stateFacade = {};
+    if (prop in _stateFacade) return;
+    Object.defineProperty(_stateFacade, prop, {
+        enumerable: true,
+        configurable: true,
+        get() {
+            if (prop in _runtime) return _runtime[prop];
+            return _persistent ? _persistent[prop] : undefined;
+        },
+    });
 }
 
 export function getState() {
-    return _state;
+    if (!_stateFacade) {
+        _stateFacade = {};
+        const keys = Object.keys(_persistent || {});
+        keys.forEach((k) => ensureFacadeProp(k));
+        Object.keys(_runtime || {}).forEach((k) => ensureFacadeProp(k));
+    }
+    return _stateFacade;
+}
+
+export function setRuntime(path, value) {
+    if (!path) return;
+    const parts = path.split(".");
+    let cur = _runtime;
+    for (let i = 0; i < parts.length - 1; i++) {
+        const p = parts[i];
+        if (!isObject(cur[p])) cur[p] = {};
+        cur = cur[p];
+    }
+    cur[parts[parts.length - 1]] = value;
+    // ensure facade has top-level getter so reads reflect runtime values
+    ensureFacadeProp(parts[0]);
+}
+
+export function clearRuntime(path) {
+    if (!path) {
+        _runtime = {};
+        return;
+    }
+    const parts = path.split(".");
+    let cur = _runtime;
+    for (let i = 0; i < parts.length - 1; i++) {
+        const p = parts[i];
+        if (!isObject(cur[p])) return;
+        cur = cur[p];
+    }
+    delete cur[parts[parts.length - 1]];
 }
 
 export function save() {
     try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(_state));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(_persistent));
     } catch (err) {
         console.error("Failed to save state:", err);
     }
@@ -48,7 +99,7 @@ export function save() {
 export function set(path, value) {
     if (!path) return;
     const parts = path.split(".");
-    let cur = _state;
+    let cur = _persistent;
     for (let i = 0; i < parts.length - 1; i++) {
         const p = parts[i];
         if (!isObject(cur[p])) cur[p] = {};
@@ -56,16 +107,20 @@ export function set(path, value) {
     }
     cur[parts[parts.length - 1]] = value;
     save();
+    // ensure facade has top-level getter for callers
+    ensureFacadeProp(parts[0]);
 }
 
 export function exportJSON() {
-    return JSON.stringify(_state, null, 2);
+    return JSON.stringify(_persistent || {}, null, 2);
 }
 
 export function importJSON(jsonStr) {
     try {
         const parsed = JSON.parse(jsonStr);
-        _state = parsed;
+        _persistent = parsed;
+        _runtime = {};
+        _stateFacade = null;
         save();
         return true;
     } catch (err) {

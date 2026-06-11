@@ -1,17 +1,21 @@
 import { Prompt } from "/lineUtil.js";
+import { setRuntime } from "/jsUtils/stateManager.js";
 
 export function updateFingerprinting({ state } = {}) {
-    state.fingerPrintInfo = {
+    const fp = {
         ...bowser.getParser(window.navigator.userAgent).parsedResult,
         language: navigator.language || navigator.userLanguage,
     };
+    setRuntime("fingerPrintInfo", fp);
 
-    state.hostname =
-        state.userName +
+    const hostname =
+        (state && state.userName ? state.userName : "") +
         "@" +
-        state.fingerPrintInfo.browser.name.toLowerCase() +
+        fp.browser.name.toLowerCase() +
         "-" +
-        state.fingerPrintInfo.browser.version.split(".")[0];
+        fp.browser.version.split(".")[0];
 
-    Prompt.array.forEach((prompt) => (prompt.hostname = state.hostname));
+    setRuntime("hostname", hostname);
+
+    Prompt.array.forEach((prompt) => (prompt.hostname = hostname));
 }
