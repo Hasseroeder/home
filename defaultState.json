@@ -1,4 +1,5 @@
 {
+    "autorun": ["updateFingerprinting", "fastfetch"],
     "userName": "user",
     "fetchModules": [
         {

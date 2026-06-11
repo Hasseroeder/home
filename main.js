@@ -25,11 +25,15 @@ input.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
     const inputStr = event.target.value;
     event.target.value = "";
+    runCommand(inputStr);
+});
+
+function runCommand(string) {
     history.append(
-        new Prompt({ hostname: state.hostname, command: inputStr }).el,
+        new Prompt({ hostname: state.hostname, command: string }).el,
     );
 
-    const commandTokens = inputStr.split(" ");
+    const commandTokens = string.split(" ");
     const commandToken = commandTokens[0];
     const argumentTokens = commandTokens.slice(1);
 
@@ -43,4 +47,6 @@ input.addEventListener("keydown", (event) => {
         argumentTokens,
         commandRegistry,
     });
-});
+}
+
+state.autorun.forEach(runCommand);
