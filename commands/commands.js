@@ -1,6 +1,7 @@
 import { printHelp } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
+import { youtube } from "/commands/youtube/youtube.js";
 import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
@@ -73,5 +74,11 @@ export const commandRegistry = [
         aliases: ["reset", "resetstate"],
         description: "restore persistent state to default and reload",
         command: resetPersistent,
+    },
+    {
+        name: "youtube",
+        aliases: ["youtube", "yt", "y", "!y"],
+        description: "search YouTube for videos",
+        command: youtube,
     },
 ];
