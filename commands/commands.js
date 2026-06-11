@@ -13,7 +13,9 @@ function setCommand({ wrapper, argumentTokens } = {}) {
     const raw = (argumentTokens || []).join(" ").trim();
     const [leftPart, ...rest] = raw.split("=");
     if (!rest.length) {
-        wrapper?.append(new Line({ textContent: "usage: set path = jsonValue" }));
+        wrapper?.append(
+            new Line({ textContent: "usage: set path = jsonValue" }),
+        );
         return;
     }
     const left = leftPart.trim();
@@ -25,12 +27,16 @@ function setCommand({ wrapper, argumentTokens } = {}) {
         value = right;
     }
     setState(left, value);
-    wrapper?.append(new Line({ textContent: `Set ${left} = ${JSON.stringify(value)}` }));
+    wrapper?.append(
+        new Line({ textContent: `Set ${left} = ${JSON.stringify(value)}` }),
+    );
 }
 
 function nanoCommand({ wrapper } = {}) {
     nano();
-    wrapper?.append(new Line({ textContent: "Opened state editor (in-page)." }));
+    wrapper?.append(
+        new Line({ textContent: "Opened state editor (in-page)." }),
+    );
 }
 
 export const commandRegistry = [
@@ -61,7 +67,8 @@ export const commandRegistry = [
     {
         name: "set",
         aliases: ["set"],
-        description: 'set state value by path (e.g. set config.autorun = ["fetch"])',
+        description:
+            'set state value by path (e.g. set config.autorun = ["fetch"])',
         command: setCommand,
     },
     {
@@ -74,6 +81,6 @@ export const commandRegistry = [
         name: "reset",
         aliases: ["reset", "resetstate"],
         description: "restore persistent state to default and reload",
-        command: () => resetPersistent(),
+        command: resetPersistent,
     },
 ];

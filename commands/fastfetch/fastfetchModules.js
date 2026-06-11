@@ -193,8 +193,14 @@ export const renderFunctionRegistry = {
     },
     weather: async function (context) {
         this.el.append(this.progressLine.wrapper);
-
         const locationData = await getLocation(context);
+        this.el.append(
+            make("span", {
+                className: "command-line",
+                textContent: `Weather for ${this.data.label ?? locationData.city}`,
+            }),
+        );
+
         const [latitude, longitude] =
             this.data.latitude && this.data.longitude
                 ? [this.data.latitude, this.data.longitude]
