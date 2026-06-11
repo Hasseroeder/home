@@ -5,13 +5,14 @@ export function nano() {
     const overlay = make("div", { className: "state-editor-overlay" });
     const modal = make("div", { className: "state-editor-modal" });
     const textarea = make("textarea", { className: "state-editor-textarea", value: exportJSON() });
-    const btnSave = make("button", { textContent: "Save" });
-    const btnCancel = make("button", { textContent: "Cancel" });
-    const btnExport = make("button", { textContent: "Export" });
+    const btnSave = make("button", { textContent: "(ctrl + s) Save" });
+    const btnCancel = make("button", { textContent: "(ctrl + c) Cancel" });
+    const btnExport = make("button", { textContent: "(ctrl + e) Export" });
 
     modal.append(textarea, btnSave, btnCancel, btnExport);
     overlay.append(modal);
     document.body.append(overlay);
+    textarea.focus();
 
     btnCancel.addEventListener("click", () => overlay.remove());
 
@@ -31,5 +32,20 @@ export function nano() {
         const a = make("a", { href: url, download: "state.json" });
         a.click();
         URL.revokeObjectURL(url);
+    });
+
+    overlay.addEventListener("keydown", (e) => {
+        if (!e.ctrlKey) return;
+        const k = (e.key || "").toLowerCase();
+        if (k === "s") {
+            e.preventDefault();
+            btnSave.click();
+        } else if (k === "e") {
+            e.preventDefault();
+            btnExport.click();
+        } else if (k === "c") {
+            e.preventDefault();
+            btnCancel.click();
+        }
     });
 }
