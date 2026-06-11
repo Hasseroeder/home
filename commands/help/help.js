@@ -3,7 +3,7 @@ import { Line } from "/lineUtil.js";
 export function printHelp({ wrapper, commandRegistry } = {}) {
     const helpLines = commandRegistry.flatMap((command) => [
         new Line({
-            textContent: command.prettyName,
+            textContent: command.name,
         }),
         new Line({
             textContent: `  ${command.description}`,

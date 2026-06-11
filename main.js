@@ -12,29 +12,29 @@ bodyWrapper.append(
     new Prompt({ className: "command-line command-input", child: input }).el,
 );
 
-document.onclick = (e) => {
+function handleDocumentClick(e) {
     const selection = window.getSelection();
     if (selection.toString().length > 0) return;
     const tag = e.target.tagName.toLowerCase();
     if (["a", "button", "input"].includes(tag)) return;
     if (e.target.isContentEditable) return;
     input.focus();
-};
+}
+document.addEventListener("click", handleDocumentClick);
 
-input.addEventListener("keydown", (event) => {
+function handleInputKeyDown(event) {
     if (event.key !== "Enter") return;
     const inputStr = event.target.value.trim();
     event.target.value = "";
     if (!inputStr) return;
     runCommand(inputStr);
-});
+}
+input.addEventListener("keydown", handleInputKeyDown);
 
 function runCommand(cmd) {
     history.append(new Prompt({ hostname: state.hostname, command: cmd }).el);
 
-    const tokens = cmd.split(/\s+/);
-    const name = tokens[0];
-    const args = tokens.slice(1);
+    const [name, ...args] = cmd.split(/\s+/);
 
     const commandObj = commandRegistry.find((c) => c.aliases.includes(name));
     if (!commandObj) return;
