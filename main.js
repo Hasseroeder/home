@@ -53,3 +53,4 @@ function runCommand(cmd) {
 }
 
 state.autorun.forEach(runCommand);
+input.focus();
