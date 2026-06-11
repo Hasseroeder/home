@@ -5,9 +5,7 @@ import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
 
-function clearCommand({ wrapper } = {}) {
-    wrapper && (wrapper.innerHTML = "");
-}
+const clearCommand = ({ wrapper } = {}) => wrapper && (wrapper.innerHTML = "");
 
 function setCommand({ wrapper, argumentTokens } = {}) {
     const raw = (argumentTokens || []).join(" ").trim();
