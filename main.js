@@ -1,5 +1,5 @@
 import { make } from "/jsUtils/injectionUtil.js";
-import { Prompt, Line } from "/lineUtil.js";
+import { Prompt } from "/lineUtil.js";
 import { commandRegistry } from "/commands/commands.js";
 import { initState, getState } from "/jsUtils/stateManager.js";
 

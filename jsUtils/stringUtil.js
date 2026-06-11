@@ -1,6 +1,6 @@
 export function signedNumberFixedString(input, fixed) {
-    if (input == undefined || Number.isNaN(Number(input))) return NaN;
-    const n = Number(input);
+    if (input == null || Number.isNaN(+input)) return NaN;
+    const n = +input;
     const sign = n < 0 ? "-" : "+";
     return sign + Math.abs(n).toFixed(fixed);
 }

@@ -9,7 +9,7 @@ export async function loadJson(path) {
 }
 
 export async function loadAll(obj) {
-    const entries = Object.entries(obj);
-    const results = await Promise.all(entries.map(([_, p]) => p));
-    return Object.fromEntries(entries.map(([key], i) => [key, results[i]]));
+    const keys = Object.keys(obj);
+    const values = await Promise.all(Object.values(obj));
+    return Object.fromEntries(keys.map((k, i) => [k, values[i]]));
 }

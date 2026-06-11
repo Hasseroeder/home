@@ -6,15 +6,14 @@ import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
 
 function clearCommand({ wrapper } = {}) {
-    if (wrapper) wrapper.innerHTML = "";
+    wrapper && (wrapper.innerHTML = "");
 }
 
 function setCommand({ wrapper, argumentTokens } = {}) {
     const raw = (argumentTokens || []).join(" ").trim();
     const [leftPart, ...rest] = raw.split("=");
     if (!rest.length) {
-        if (wrapper)
-            wrapper.append(new Line({ textContent: "usage: set path = jsonValue" }));
+        wrapper?.append(new Line({ textContent: "usage: set path = jsonValue" }));
         return;
     }
     const left = leftPart.trim();
@@ -26,30 +25,25 @@ function setCommand({ wrapper, argumentTokens } = {}) {
         value = right;
     }
     setState(left, value);
-    if (wrapper)
-        wrapper.append(
-            new Line({ textContent: `Set ${left} = ${JSON.stringify(value)}` }),
-        );
+    wrapper?.append(new Line({ textContent: `Set ${left} = ${JSON.stringify(value)}` }));
 }
 
 function nanoCommand({ wrapper } = {}) {
     nano();
-    if (wrapper)
-        wrapper.append(new Line({ textContent: "Opened state editor (in-page)." }));
+    wrapper?.append(new Line({ textContent: "Opened state editor (in-page)." }));
 }
 
 export const commandRegistry = [
     {
         name: "fetch",
         aliases: ["fetch", "fastfetch", "hyfetch", "neofetch"],
-        description:
-            "fetches interesting or useful information about current session",
+        description: "shows session info",
         command: fastfetch,
     },
     {
         name: "clear",
         aliases: ["c", "clear"],
-        description: "clears up command history",
+        description: "clears command history",
         command: clearCommand,
     },
     {
@@ -61,21 +55,19 @@ export const commandRegistry = [
     {
         name: "updateFingerprinting",
         aliases: ["updateFingerprinting"],
-        description:
-            "debug function used to refresh outdated fingerprinting info",
+        description: "refresh fingerprinting info",
         command: updateFingerprinting,
     },
     {
         name: "set",
         aliases: ["set"],
-        description:
-            'set a state value by path. Example: set config.autorun = ["fetch"]',
+        description: 'set state value by path (e.g. set config.autorun = ["fetch"])',
         command: setCommand,
     },
     {
         name: "nano",
         aliases: ["nano", "editstate", "editor"],
-        description: "open simple JSON editor for state",
+        description: "open JSON state editor",
         command: nanoCommand,
     },
     {
