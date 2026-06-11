@@ -195,11 +195,14 @@ export const renderFunctionRegistry = {
         this.el.append(this.progressLine.wrapper);
 
         const locationData = await getLocation(context);
-        const [latitude, longitude] = locationData.loc.split(",");
+        const [latitude, longitude] =
+            this.data.latitude && this.data.longitude
+                ? [this.data.latitude, this.data.longitude]
+                : locationData.loc.split(",");
         const metroAPI = "https://api.open-meteo.com/v1/forecast?";
         const options = [
-            "latitude=" + (this.data.latitude ?? latitude),
-            "longitude=" + (this.data.longitude ?? longitude),
+            "latitude=" + latitude,
+            "longitude=" + longitude,
             "daily=" +
                 [
                     "temperature_2m_max",
