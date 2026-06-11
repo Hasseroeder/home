@@ -44,6 +44,7 @@ function runCommand(cmd) {
     if (!commandObj) return;
     commandObj.command({
         wrapper: history,
+        input,
         state,
         argumentTokens: args,
         commandRegistry,

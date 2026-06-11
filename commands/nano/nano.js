@@ -1,10 +1,13 @@
 import { make } from "/jsUtils/injectionUtil.js";
 import { exportJSON, importJSON } from "/jsUtils/stateManager.js";
 
-export function nano() {
+export function nano({ input } = {}) {
     const overlay = make("div", { className: "state-editor-overlay" });
     const modal = make("div", { className: "state-editor-modal" });
-    const textarea = make("textarea", { className: "state-editor-textarea", value: exportJSON() });
+    const textarea = make("textarea", {
+        className: "state-editor-textarea",
+        value: exportJSON(),
+    });
     const btnSave = make("button", { textContent: "(ctrl + s) Save" });
     const btnCancel = make("button", { textContent: "(ctrl + c) Cancel" });
     const btnExport = make("button", { textContent: "(ctrl + e) Export" });
@@ -14,7 +17,7 @@ export function nano() {
     document.body.append(overlay);
     textarea.focus();
 
-    btnCancel.addEventListener("click", () => overlay.remove());
+    btnCancel.addEventListener("click", close);
 
     btnSave.addEventListener("click", () => {
         const ok = importJSON(textarea.value);
@@ -22,7 +25,7 @@ export function nano() {
             alert("Invalid JSON — not saved.");
             return;
         }
-        overlay.remove();
+        close();
         location.reload();
     });
 
@@ -48,4 +51,9 @@ export function nano() {
             btnCancel.click();
         }
     });
+
+    function close() {
+        overlay.remove();
+        input?.focus();
+    }
 }

@@ -32,13 +32,6 @@ function setCommand({ wrapper, argumentTokens } = {}) {
     );
 }
 
-function nanoCommand({ wrapper } = {}) {
-    nano();
-    wrapper?.append(
-        new Line({ textContent: "Opened state editor (in-page)." }),
-    );
-}
-
 export const commandRegistry = [
     {
         name: "fetch",
@@ -75,7 +68,7 @@ export const commandRegistry = [
         name: "nano",
         aliases: ["nano", "editstate", "editor"],
         description: "open JSON state editor",
-        command: nanoCommand,
+        command: nano,
     },
     {
         name: "reset",
