@@ -14,10 +14,14 @@ bodyWrapper.append(
 
 function handleDocumentClick(e) {
     const selection = window.getSelection();
-    if (selection.toString().length > 0) return;
-    const tag = e.target.tagName.toLowerCase();
-    if (["a", "button", "input"].includes(tag)) return;
-    if (e.target.isContentEditable) return;
+    if (selection && selection.toString().length > 0) return;
+    const el = e.target;
+    if (el.isContentEditable) return;
+    if (
+        el.closest &&
+        el.closest("a, button, input, textarea, select, [tabindex]")
+    )
+        return;
     input.focus();
 }
 document.addEventListener("click", handleDocumentClick);
@@ -38,7 +42,12 @@ function runCommand(cmd) {
 
     const commandObj = commandRegistry.find((c) => c.aliases.includes(name));
     if (!commandObj) return;
-    commandObj.command({ wrapper: history, state, argumentTokens: args, commandRegistry });
+    commandObj.command({
+        wrapper: history,
+        state,
+        argumentTokens: args,
+        commandRegistry,
+    });
 }
 
 state.autorun.forEach(runCommand);
