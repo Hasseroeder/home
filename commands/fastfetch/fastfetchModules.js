@@ -194,6 +194,7 @@ export const renderFunctionRegistry = {
     weather: async function (context) {
         const header = make("span", {
             className: "command-line",
+            textContent: "Weather for loading...",
         });
         this.el.append(header);
         this.el.append(this.progressLine.wrapper);

@@ -43,7 +43,7 @@ class FastfetchKeyManager {
     }
 }
 
-export function fastfetch({ wrapper, state } = {}) {
+export function fastfetch({ wrapper, state, input } = {}) {
     const fetchModules = state.fetchModules.map(createFastfetchModule);
     const fetchWrapper = make("div", { className: "fetch-wrapper" });
     const textWrapper = make("div", { className: "fetch-text-wrapper" });
@@ -51,6 +51,7 @@ export function fastfetch({ wrapper, state } = {}) {
     wrapper.append(new Line(), fetchWrapper, new Line());
 
     const context = {
+        input,
         state,
         fetchWrapper,
         textWrapper,
@@ -105,6 +106,7 @@ class FastfetchModule {
             this.progressLine.value.el.textContent = "failed";
             console.error(`Error loading module '${this.slug}':`, err);
         }
+        context.input.scrollIntoView();
     }
 }
 

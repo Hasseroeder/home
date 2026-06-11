@@ -49,6 +49,7 @@ function runCommand(cmd) {
         argumentTokens: args,
         commandRegistry,
     });
+    input.scrollIntoView();
 }
 
 state.autorun.forEach(runCommand);
