@@ -1,10 +1,10 @@
-import { loadJson } from "/jsUtils/jsonUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
 import { Prompt, Line } from "/lineUtil.js";
 import { commandRegistry } from "/commands/commands.js";
+import { initState, getState } from "/jsUtils/stateManager.js";
 
-const defaultState = await loadJson("/defaultState.json");
-const state = JSON.parse(JSON.stringify(defaultState));
+await initState();
+const state = getState();
 const bodyWrapper = document.querySelector(".body-wrapper");
 const history = document.querySelector(".command-history");
 const input = make("input", { type: "text" });

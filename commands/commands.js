@@ -1,6 +1,8 @@
 import { printHelp } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
+import { set as setState, openEditor } from "/jsUtils/stateManager.js";
+import { Line } from "/lineUtil.js";
 
 export const commandRegistry = [
     {
@@ -30,5 +32,37 @@ export const commandRegistry = [
         description:
             "debug function used to refresh outdated fingerprinting info",
         command: updateFingerprinting,
+    },
+    {
+        prettyName: "set",
+        aliases: ["set"],
+        description: "set a state value by path. Example: set config.autorun = [\"fetch\"]",
+        command: ({ wrapper, argumentTokens } = {}) => {
+            const raw = argumentTokens.join(" ");
+            const parts = raw.split("=");
+            if (parts.length < 2) {
+                wrapper.append(new Line({ textContent: "usage: set path = jsonValue" }));
+                return;
+            }
+            const left = parts.shift().trim();
+            const right = parts.join("=").trim();
+            let value;
+            try {
+                value = JSON.parse(right);
+            } catch (err) {
+                value = right;
+            }
+            setState(left, value);
+            wrapper.append(new Line({ textContent: `Set ${left} = ${JSON.stringify(value)}` }));
+        },
+    },
+    {
+        prettyName: "nano",
+        aliases: ["nano", "editstate", "editor"],
+        description: "open simple JSON editor for state",
+        command: ({ wrapper } = {}) => {
+            openEditor();
+            wrapper.append(new Line({ textContent: "Opened state editor (in-page)." }));
+        },
     },
 ];

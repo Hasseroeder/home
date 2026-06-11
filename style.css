@@ -71,3 +71,39 @@ a:hover {
     I am getting rid of it here.
     */
 }
+
+.state-editor-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.state-editor-modal {
+    background: #0f1111;
+    padding: 1rem;
+    border: 1px solid #222;
+    width: min(90vw, 900px);
+    height: min(80vh, 700px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.state-editor-textarea {
+    flex: 1 1 auto;
+    background: #0b0b0b;
+    color: lightgray;
+    border: 1px solid #222;
+    padding: 0.5rem;
+    font-family: MesloLGM Nerd Font, monospace;
+    font-size: 0.8rem;
+    resize: vertical;
+}
+.state-editor-modal button {
+    background: #222;
+    color: lightgray;
+    border: 1px solid #333;
+    padding: 0.35rem 0.6rem;
+}
