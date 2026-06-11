@@ -65,37 +65,46 @@ export const renderFunctionRegistry = {
             imageData = await antix1Fetch.json();
         } catch {}
 
-        const sourceLine = new FastfetchLine({
-            keyConfig: {
-                ...this.data.keyConfig,
-                textContent: "Source",
+        const sourceLine = new FastfetchLine(
+            {
+                keyConfig: {
+                    ...this.data.keyConfig,
+                    textContent: "Source",
+                },
+                valueConfig: {
+                    textContent: imageData.source,
+                    href: imageData.source,
+                },
             },
-            valueConfig: {
-                textContent: imageData.source,
-                href: imageData.source,
+            context.keyManager,
+        );
+        const konachanLine = new FastfetchLine(
+            {
+                keyConfig: {
+                    ...this.data.keyConfig,
+                    textContent: "Konachan",
+                },
+                valueConfig: {
+                    textContent: `https://konachan.net/post/show/${imageData.id}`,
+                    href: `https://konachan.net/post/show/${imageData.id}`,
+                },
             },
-        });
-        const konachanLine = new FastfetchLine({
-            keyConfig: {
-                ...this.data.keyConfig,
-                textContent: "Konachan",
-            },
-            valueConfig: {
-                textContent: `https://konachan.net/post/show/${imageData.id}`,
-                href: `https://konachan.net/post/show/${imageData.id}`,
-            },
-        });
+            context.keyManager,
+        );
         this.el.append(sourceLine.wrapper, konachanLine.wrapper);
         this.fetchImage.src = imageData.src;
     },
     os: async function (context) {
         const fingerPrintInfo = context.state.fingerPrintInfo;
-        const line = new FastfetchLine({
-            keyConfig: this.data.keyConfig,
-            valueConfig: {
-                textContent: `${fingerPrintInfo.platform.type} ${fingerPrintInfo.os.name.toLowerCase()}`,
+        const line = new FastfetchLine(
+            {
+                keyConfig: this.data.keyConfig,
+                valueConfig: {
+                    textContent: `${fingerPrintInfo.platform.type} ${fingerPrintInfo.os.name.toLowerCase()}`,
+                },
             },
-        });
+            context.keyManager,
+        );
         const OSicon = {
             linux: "󰌽",
             android: "󰀲",
@@ -108,12 +117,15 @@ export const renderFunctionRegistry = {
         this.el.append(line.wrapper);
     },
     locale: async function (context) {
-        const line = new FastfetchLine({
-            keyConfig: this.data.keyConfig,
-            valueConfig: {
-                textContent: context.state.fingerPrintInfo.language,
+        const line = new FastfetchLine(
+            {
+                keyConfig: this.data.keyConfig,
+                valueConfig: {
+                    textContent: context.state.fingerPrintInfo.language,
+                },
             },
-        });
+            context.keyManager,
+        );
         this.el.append(line.wrapper);
     },
     time: async function (context) {
@@ -129,16 +141,19 @@ export const renderFunctionRegistry = {
                 Europe: "",
             }[region];
 
-            const clockLine = new FastfetchLine({
-                keyConfig: {
-                    category: this.data.keyConfig.category,
-                    emoji: globeIcon ?? this.data.keyConfig.emoji,
-                    textContent: tz.airport + " UTC" + utcString,
+            const clockLine = new FastfetchLine(
+                {
+                    keyConfig: {
+                        category: this.data.keyConfig.category,
+                        emoji: globeIcon ?? this.data.keyConfig.emoji,
+                        textContent: tz.airport + " UTC" + utcString,
+                    },
+                    valueConfig: {
+                        textContent: new Date().toLocaleTimeString("en-US", tz),
+                    },
                 },
-                valueConfig: {
-                    textContent: new Date().toLocaleTimeString("en-US", tz),
-                },
-            });
+                context.keyManager,
+            );
             this.el.append(clockLine.wrapper);
 
             const update = () =>
@@ -153,21 +168,27 @@ export const renderFunctionRegistry = {
     ip: async function (context) {
         this.el.append(this.progressLine.wrapper);
         const locationData = await getLocation(context);
-        const line = new FastfetchLine({
-            keyConfig: this.data.keyConfig,
-            valueConfig: { textContent: locationData.ip },
-        });
+        const line = new FastfetchLine(
+            {
+                keyConfig: this.data.keyConfig,
+                valueConfig: { textContent: locationData.ip },
+            },
+            context.keyManager,
+        );
         this.el.append(line.wrapper);
     },
     location: async function (context) {
         this.el.append(this.progressLine.wrapper);
         const locationData = await getLocation(context);
-        const line = new FastfetchLine({
-            keyConfig: this.data.keyConfig,
-            valueConfig: {
-                textContent: `${locationData.city} ${locationData.region} ${locationData.country}`,
+        const line = new FastfetchLine(
+            {
+                keyConfig: this.data.keyConfig,
+                valueConfig: {
+                    textContent: `${locationData.city} ${locationData.region} ${locationData.country}`,
+                },
             },
-        });
+            context.keyManager,
+        );
         this.el.append(line.wrapper);
     },
     weather: async function (context) {
@@ -207,17 +228,20 @@ export const renderFunctionRegistry = {
                 ` ${dailyData.temperature_2m_max[i]}°C`.padEnd(10) +
                 ` ${dailyData.temperature_2m_min[i]}°C`;
 
-            const line = new FastfetchLine({
-                keyConfig: {
-                    ...this.data.keyConfig,
-                    textContent: date.toLocaleString(
-                        ...this.data.keyConfig.dateFormat,
-                    ),
+            const line = new FastfetchLine(
+                {
+                    keyConfig: {
+                        ...this.data.keyConfig,
+                        textContent: date.toLocaleString(
+                            ...this.data.keyConfig.dateFormat,
+                        ),
+                    },
+                    valueConfig: {
+                        textContent: rainStr.padEnd(35) + tempStr,
+                    },
                 },
-                valueConfig: {
-                    textContent: rainStr.padEnd(35) + tempStr,
-                },
-            });
+                context.keyManager,
+            );
             this.el.append(line.wrapper);
         });
     },

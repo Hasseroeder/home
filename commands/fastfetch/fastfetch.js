@@ -2,6 +2,47 @@ import { make } from "/jsUtils/injectionUtil.js";
 import { renderFunctionRegistry } from "/commands/fastfetch/fastfetchModules.js";
 import { Line } from "/lineUtil.js";
 
+class FastfetchKeyManager {
+    constructor(separator = "  ⇀ ") {
+        this.array = [];
+        this.separator = separator;
+    }
+
+    add(key) {
+        this.array.push(key);
+        this.update();
+    }
+
+    remove(key) {
+        const i = this.array.indexOf(key);
+        if (i > -1) {
+            this.array.splice(i, 1);
+            this.update();
+        }
+    }
+
+    update() {
+        const groups = new Map();
+        let maxPadding = 0;
+        for (const key of this.array) {
+            maxPadding = Math.max(maxPadding, key.textpadding);
+            !groups.has(key.category) && groups.set(key.category, []);
+            groups.get(key.category).push(key);
+        }
+        for (const [, keys] of groups) {
+            keys.forEach((key, i) => {
+                if (i === keys.length - 1 || key.category === undefined)
+                    key.structure = "└";
+                else key.structure = "├";
+            });
+        }
+        for (const key of this.array) {
+            key.textpadding = maxPadding;
+            key.update();
+        }
+    }
+}
+
 export function fastfetch({ wrapper, state } = {}) {
     const fetchModules = state.fetchModules.map(createFastfetchModule);
     const fetchWrapper = make("div", { className: "fetch-wrapper" });
@@ -13,6 +54,7 @@ export function fastfetch({ wrapper, state } = {}) {
         state,
         fetchWrapper,
         textWrapper,
+        keyManager: new FastfetchKeyManager(),
     };
 
     // synchronous
@@ -41,13 +83,16 @@ class FastfetchModule {
 
     init(context) {
         this.el = make("div", { className: "grid" });
-        this.progressLine = new FastfetchLine({
-            keyConfig: {
-                ...this.data.keyConfig,
-                textContent: "Module",
+        this.progressLine = new FastfetchLine(
+            {
+                keyConfig: {
+                    ...this.data.keyConfig,
+                    textContent: "Module",
+                },
+                valueConfig: { textContent: "in progress" },
             },
-            valueConfig: { textContent: "in progress" },
-        });
+            context.keyManager,
+        );
         this.el.append(this.progressLine.wrapper);
         context.textWrapper.append(this.el);
     }
@@ -64,10 +109,10 @@ class FastfetchModule {
 }
 
 export class FastfetchLine {
-    constructor(config) {
+    constructor(config, keyManager) {
         const { keyConfig, valueConfig } = config;
 
-        this.key = new FastfetchKey(keyConfig);
+        this.key = new FastfetchKey(keyConfig, keyManager);
         this.value = new FastfetchValue(valueConfig);
         this.wrapper = make("span", { className: "command-line" }, [
             this.key.el,
@@ -76,11 +121,7 @@ export class FastfetchLine {
     }
     remove() {
         this.wrapper.remove();
-        const i = FastfetchKey.array.indexOf(this.key);
-        if (i > -1) {
-            FastfetchKey.array.splice(i, 1);
-            FastfetchKey.update();
-        }
+        this.key.manager.remove(this.key);
     }
 }
 
@@ -93,7 +134,7 @@ class FastfetchValue {
 }
 
 class FastfetchKey {
-    constructor({ category, emoji, textContent }) {
+    constructor({ category, emoji, textContent }, manager) {
         this.category = category;
         this._emoji = emoji;
         this._textContent = textContent;
@@ -101,8 +142,8 @@ class FastfetchKey {
         this.structure = "├";
 
         this.el = make("span");
-        FastfetchKey.array.push(this);
-        FastfetchKey.update();
+        this.manager = manager;
+        this.manager.add(this);
     }
 
     get emoji() {
@@ -110,7 +151,7 @@ class FastfetchKey {
     }
     set emoji(emoji) {
         this._emoji = emoji;
-        this.update();
+        this.manager.update();
     }
 
     get textContent() {
@@ -118,7 +159,7 @@ class FastfetchKey {
     }
     set textContent(textContent) {
         this._textContent = textContent;
-        this.update();
+        this.manager.update();
     }
 
     update() {
@@ -126,28 +167,6 @@ class FastfetchKey {
             `${this.structure} ` +
             `${this._emoji}  ` +
             this.textContent.padEnd(this.textpadding) +
-            FastfetchKey.separator;
-    }
-    static array = [];
-    static separator = "  ⇀ ";
-    static update() {
-        const groups = new Map();
-        let maxPadding = 0;
-        for (const key of FastfetchKey.array) {
-            maxPadding = Math.max(maxPadding, key.textpadding);
-            !groups.has(key.category) && groups.set(key.category, []);
-            groups.get(key.category).push(key);
-        }
-        for (const [, keys] of groups) {
-            keys.forEach((key, i) => {
-                if (i === keys.length - 1 || key.category === undefined)
-                    key.structure = "└";
-                else key.structure = "├";
-            });
-        }
-        for (const key of FastfetchKey.array) {
-            key.textpadding = maxPadding;
-            key.update();
-        }
+            this.manager.separator;
     }
 }
