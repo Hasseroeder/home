@@ -97,7 +97,9 @@ a:hover {
     color: lightgray;
     border: 1px solid #222;
     padding: 0.5rem;
-    font-family: MesloLGM Nerd Font, monospace;
+    font-family:
+        MesloLGM Nerd Font,
+        monospace;
     font-size: 0.8rem;
     resize: vertical;
 }
@@ -106,4 +108,10 @@ a:hover {
     color: lightgray;
     border: 1px solid #333;
     padding: 0.35rem 0.6rem;
+    font-family:
+        MesloLGM Nerd Font,
+        monospace;
+}
+.state-editor-modal button:hover {
+    background: #333;
 }
