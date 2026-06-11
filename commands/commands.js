@@ -1,11 +1,8 @@
 import { printHelp } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
-import {
-    set as setState,
-    openEditor,
-    resetPersistent,
-} from "/jsUtils/stateManager.js";
+import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
+import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
 
 export const commandRegistry = [
@@ -72,7 +69,7 @@ export const commandRegistry = [
         aliases: ["nano", "editstate", "editor"],
         description: "open simple JSON editor for state",
         command: ({ wrapper } = {}) => {
-            openEditor();
+            nano();
             wrapper.append(
                 new Line({ textContent: "Opened state editor (in-page)." }),
             );
@@ -82,9 +79,6 @@ export const commandRegistry = [
         prettyName: "reset",
         aliases: ["reset", "resetstate"],
         description: "restore persistent state to default and reload",
-        command: ({ wrapper } = {}) => {
-            resetPersistent();
-            location.reload();
-        },
+        command: () => resetPersistent(),
     },
 ];
