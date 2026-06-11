@@ -56,20 +56,16 @@ a:hover {
     background: transparent;
     color: lightgray;
     border: none;
-    width: -moz-available;
     padding: 0;
     margin: 0;
     outline: none;
     font-family: MesloLGM Nerd Font;
     font-size: 0.8rem;
+    flex: 1 1 auto;
 }
 
 .command-input {
-    margin-top: -0.025rem;
-    /* 
-    I have no clue why a certain amount of padding is built in and not avoidable,
-    I am getting rid of it here.
-    */
+    display: flex;
 }
 
 .state-editor-overlay {
