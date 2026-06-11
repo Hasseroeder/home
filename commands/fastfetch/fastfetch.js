@@ -3,9 +3,7 @@ import { renderFunctionRegistry } from "/commands/fastfetch/fastfetchModules.js"
 import { Line } from "/lineUtil.js";
 
 export function fastfetch({ wrapper, state } = {}) {
-    const fetchModules = state.fetchModules.map((config) =>
-        createFastfetchModule(config),
-    );
+    const fetchModules = state.fetchModules.map(createFastfetchModule);
     const fetchWrapper = make("div", { className: "fetch-wrapper" });
     const textWrapper = make("div", { className: "fetch-text-wrapper" });
     fetchWrapper.append(textWrapper);
@@ -17,9 +15,9 @@ export function fastfetch({ wrapper, state } = {}) {
         textWrapper,
     };
 
-    //synchonous
+    // synchronous
     fetchModules.forEach((module) => module.init(context));
-    //parallel
+    // async (parallel)
     fetchModules.forEach((module) => module.tryRenderContent(context));
 }
 
@@ -50,6 +48,7 @@ class FastfetchModule {
             },
             valueConfig: { textContent: "in progress" },
         });
+        this.el.append(this.progressLine.wrapper);
         context.textWrapper.append(this.el);
     }
 
@@ -87,10 +86,9 @@ export class FastfetchLine {
 
 class FastfetchValue {
     constructor({ textContent, href }) {
-        if (href) {
-            this.el = make("a", { textContent, href });
-        }
-        this.el = make("span", { textContent });
+        this.el = href
+            ? make("a", { textContent, href })
+            : make("span", { textContent });
     }
 }
 

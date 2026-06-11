@@ -29,23 +29,16 @@ input.addEventListener("keydown", (event) => {
     runCommand(inputStr);
 });
 
-function runCommand(string) {
-    history.append(new Prompt({ hostname: state.hostname, command: string }).el);
+function runCommand(cmd) {
+    history.append(new Prompt({ hostname: state.hostname, command: cmd }).el);
 
-    const commandTokens = string.split(/\s+/);
-    const commandToken = commandTokens[0];
-    const argumentTokens = commandTokens.slice(1);
+    const tokens = cmd.split(/\s+/);
+    const name = tokens[0];
+    const args = tokens.slice(1);
 
-    const commandObj = commandRegistry.find((command) =>
-        command.aliases.includes(commandToken),
-    );
+    const commandObj = commandRegistry.find((c) => c.aliases.includes(name));
     if (!commandObj) return;
-    commandObj.command({
-        wrapper: history,
-        state,
-        argumentTokens,
-        commandRegistry,
-    });
+    commandObj.command({ wrapper: history, state, argumentTokens: args, commandRegistry });
 }
 
 state.autorun.forEach(runCommand);
