@@ -1,26 +1,25 @@
-function setCookie(name, value, daysToLive) {
+function setCookie(name, value, daysToLive = 365) {
     const date = new Date();
     date.setDate(date.getDate() + daysToLive);
 
-    let expires = "expires=" + date.toUTCString();
-    document.cookie = `${name}=${value}; ${expires};`;
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; ${expires}; path=/;`;
 }
 
 function deleteCookie(name) {
-    setCookie(name, null, null);
+    setCookie(name, "", -1);
 }
 
 function getCookie(name) {
-    const cookieDecoded = decodeURIComponent(document.cookie);
+    const cookieDecoded = decodeURIComponent(document.cookie || "");
     const cookieArray = cookieDecoded.split("; ");
 
-    let result = null;
-    cookieArray.forEach((element) => {
-        if (element.indexOf(name) == 0) {
-            result = element.substring(name.length + 1);
+    for (const element of cookieArray) {
+        if (element.startsWith(name + "=")) {
+            return element.substring(name.length + 1);
         }
-    });
-    return result;
+    }
+    return null;
 }
 
 export { getCookie, setCookie, deleteCookie };

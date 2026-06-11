@@ -132,8 +132,6 @@ export function importJSON(jsonStr) {
 export async function resetPersistent() {
     const defaultState = await loadJson("/defaultState.json");
     _persistent = JSON.parse(JSON.stringify(defaultState));
-    _runtime = {};
-    _stateFacade = null;
     save();
     location.reload();
 }

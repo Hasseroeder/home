@@ -23,17 +23,16 @@ document.onclick = (e) => {
 
 input.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
-    const inputStr = event.target.value;
+    const inputStr = event.target.value.trim();
     event.target.value = "";
+    if (!inputStr) return;
     runCommand(inputStr);
 });
 
 function runCommand(string) {
-    history.append(
-        new Prompt({ hostname: state.hostname, command: string }).el,
-    );
+    history.append(new Prompt({ hostname: state.hostname, command: string }).el);
 
-    const commandTokens = string.split(" ");
+    const commandTokens = string.split(/\s+/);
     const commandToken = commandTokens[0];
     const argumentTokens = commandTokens.slice(1);
 

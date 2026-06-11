@@ -18,7 +18,7 @@ export const commandRegistry = [
         aliases: ["c", "clear"],
         description: "clears up command history",
         command: (wrapper) => {
-            while (wrapper.lastChild) wrapper.lastChild.remove();
+            wrapper.innerHTML = "";
         },
     },
     {
