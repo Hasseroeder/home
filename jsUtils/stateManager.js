@@ -102,6 +102,7 @@ export function openEditor() {
             return;
         }
         overlay.remove();
+        location.reload();
     });
 
     btnExport.addEventListener("click", () => {
