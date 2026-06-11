@@ -129,6 +129,20 @@ export function importJSON(jsonStr) {
     }
 }
 
+export async function resetPersistent() {
+    try {
+        const defaultState = await loadJson("/defaultState.json");
+        _persistent = JSON.parse(JSON.stringify(defaultState));
+        _runtime = {};
+        _stateFacade = null;
+        save();
+        return true;
+    } catch (err) {
+        console.error("Failed to reset persistent state:", err);
+        return false;
+    }
+}
+
 export function openEditor() {
     const overlay = document.createElement("div");
     overlay.className = "state-editor-overlay";

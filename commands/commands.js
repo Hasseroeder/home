@@ -1,7 +1,11 @@
 import { printHelp } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
-import { set as setState, openEditor } from "/jsUtils/stateManager.js";
+import {
+    set as setState,
+    openEditor,
+    resetPersistent,
+} from "/jsUtils/stateManager.js";
 import { Line } from "/lineUtil.js";
 
 export const commandRegistry = [
@@ -36,12 +40,15 @@ export const commandRegistry = [
     {
         prettyName: "set",
         aliases: ["set"],
-        description: "set a state value by path. Example: set config.autorun = [\"fetch\"]",
+        description:
+            'set a state value by path. Example: set config.autorun = ["fetch"]',
         command: ({ wrapper, argumentTokens } = {}) => {
             const raw = argumentTokens.join(" ");
             const parts = raw.split("=");
             if (parts.length < 2) {
-                wrapper.append(new Line({ textContent: "usage: set path = jsonValue" }));
+                wrapper.append(
+                    new Line({ textContent: "usage: set path = jsonValue" }),
+                );
                 return;
             }
             const left = parts.shift().trim();
@@ -53,7 +60,11 @@ export const commandRegistry = [
                 value = right;
             }
             setState(left, value);
-            wrapper.append(new Line({ textContent: `Set ${left} = ${JSON.stringify(value)}` }));
+            wrapper.append(
+                new Line({
+                    textContent: `Set ${left} = ${JSON.stringify(value)}`,
+                }),
+            );
         },
     },
     {
@@ -62,7 +73,18 @@ export const commandRegistry = [
         description: "open simple JSON editor for state",
         command: ({ wrapper } = {}) => {
             openEditor();
-            wrapper.append(new Line({ textContent: "Opened state editor (in-page)." }));
+            wrapper.append(
+                new Line({ textContent: "Opened state editor (in-page)." }),
+            );
+        },
+    },
+    {
+        prettyName: "reset",
+        aliases: ["reset", "resetstate"],
+        description: "restore persistent state to default and reload",
+        command: ({ wrapper } = {}) => {
+            resetPersistent();
+            location.reload();
         },
     },
 ];
