@@ -54,7 +54,7 @@ export const renderFunctionRegistry = {
         };
         try {
             const antix1Fetch = await fetch(
-                "https://antix1.transaero.space/api/",
+                "https://antix1.transaero.space/api",
                 {
                     method: "GET",
                     headers: {
