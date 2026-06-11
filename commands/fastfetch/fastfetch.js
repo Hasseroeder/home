@@ -1,6 +1,38 @@
 import { make } from "/jsUtils/injectionUtil.js";
+import { renderFunctionRegistry } from "/commands/fastfetch/fastfetchModules.js";
+import { Line } from "/lineUtil.js";
 
-export class FastfetchModule {
+export function fastfetch({ wrapper, state } = {}) {
+    const fetchModules = state.fetchModules.map((config) =>
+        createFastfetchModule(config),
+    );
+    const fetchWrapper = make("div", { className: "fetch-wrapper" });
+    const textWrapper = make("div", { className: "fetch-text-wrapper" });
+    fetchWrapper.append(textWrapper);
+    wrapper.append(new Line(), fetchWrapper, new Line());
+
+    const context = {
+        state,
+        fetchWrapper,
+        textWrapper,
+    };
+
+    //synchonous
+    fetchModules.forEach((module) => module.init(context));
+    //parallel
+    fetchModules.forEach((module) => module.tryRenderContent(context));
+}
+
+const createFastfetchModule = (config) => {
+    const renderFunction = renderFunctionRegistry[config.slug];
+    if (!renderFunction) throw new Error("Unknown module: " + config.slug);
+    return new FastfetchModule({
+        ...config,
+        renderContent: renderFunction,
+    });
+};
+
+class FastfetchModule {
     constructor(config) {
         this.slug = config.slug;
         this.data = { ...(config.data ?? {}) };

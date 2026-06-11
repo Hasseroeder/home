@@ -1,100 +1,16 @@
 import { loadJson } from "/jsUtils/jsonUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
-import { createFastfetchModule } from "/fastfetchModules.js";
 import { Prompt, Line } from "/lineUtil.js";
+import { commandRegistry } from "/commands/commands.js";
 
 const defaultState = await loadJson("/defaultState.json");
 const state = JSON.parse(JSON.stringify(defaultState));
-const topWindow = document.querySelector(".body-wrapper");
+const bodyWrapper = document.querySelector(".body-wrapper");
 const history = document.querySelector(".command-history");
 const input = make("input", { type: "text" });
-topWindow.append(
+bodyWrapper.append(
     new Prompt({ className: "command-line command-input", child: input }).el,
 );
-
-const commandRegistry = [
-    {
-        prettyName: "fetch",
-        aliases: ["fetch", "fastfetch", "hyfetch", "neofetch"],
-        description:
-            "fetches interesting or useful information about current session",
-        command: fastfetch,
-    },
-    {
-        prettyName: "clear",
-        aliases: ["c", "clear"],
-        description: "clears up command history",
-        command: (wrapper) => {
-            while (wrapper.lastChild) wrapper.lastChild.remove();
-        },
-    },
-    {
-        prettyName: "help",
-        aliases: ["h", "help"],
-        description: "shows a list of commands, descriptions and aliases",
-        command: printHelp,
-    },
-    {
-        prettyName: "updateFingerprinting",
-        aliases: ["updateFingerprinting"],
-        description:
-            "debug function used to refresh outdated fingerprinting info",
-        command: updateFingerprinting,
-    },
-];
-
-function printHelp(wrapper) {
-    const helpLines = commandRegistry.flatMap((command) => [
-        new Line({
-            textContent: command.prettyName,
-        }),
-        new Line({
-            textContent: `  ${command.description}`,
-        }),
-        new Line({
-            textContent: `  [ ${command.aliases.join(", ")} ]`,
-        }),
-    ]);
-
-    wrapper.append(new Line(), ...helpLines, new Line());
-}
-
-function updateFingerprinting() {
-    state.fingerPrintInfo = {
-        ...bowser.getParser(window.navigator.userAgent).parsedResult,
-        language: navigator.language || navigator.userLanguage,
-    };
-
-    state.hostname =
-        state.userName +
-        "@" +
-        state.fingerPrintInfo.browser.name.toLowerCase() +
-        "-" +
-        state.fingerPrintInfo.browser.version.split(".")[0];
-
-    Prompt.array.forEach((prompt) => (prompt.hostname = state.hostname));
-}
-
-function fastfetch(wrapper) {
-    const fetchModules = state.fetchModules.map((config) =>
-        createFastfetchModule(config),
-    );
-    const fetchWrapper = make("div", { className: "fetch-wrapper" });
-    const textWrapper = make("div", { className: "fetch-text-wrapper" });
-    fetchWrapper.append(textWrapper);
-    wrapper.append(new Line(), fetchWrapper, new Line());
-
-    const context = {
-        state,
-        fetchWrapper,
-        textWrapper,
-    };
-
-    //synchonous
-    fetchModules.forEach((module) => module.init(context));
-    //parallel
-    fetchModules.forEach((module) => module.tryRenderContent(context));
-}
 
 document.onclick = (e) => {
     const selection = window.getSelection();
@@ -121,7 +37,10 @@ input.addEventListener("keydown", (event) => {
         command.aliases.includes(commandToken),
     );
     if (!commandObj) return;
-    commandObj.command(history);
+    commandObj.command({
+        wrapper: history,
+        state,
+        argumentTokens,
+        commandRegistry,
+    });
 });
-
-updateFingerprinting();

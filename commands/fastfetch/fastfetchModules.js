@@ -1,6 +1,6 @@
 import { loadJson } from "/jsUtils/jsonUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
-import { FastfetchModule, FastfetchLine } from "/fastfetch.js";
+import { FastfetchLine } from "/commands/fastfetch/fastfetch.js";
 
 const weatherCodesPromise = loadJson("/media/weather_codes.json");
 
@@ -22,7 +22,7 @@ function getUtcOffsetString(timeZone) {
     }).format(utcOffset);
 }
 
-const renderFunctionRegistry = {
+export const renderFunctionRegistry = {
     header: async function (context) {
         this.el.append(
             make("span", {
@@ -229,13 +229,4 @@ const renderFunctionRegistry = {
             this.el.append(line.wrapper);
         });
     },
-};
-
-export const createFastfetchModule = (config) => {
-    const renderFunction = renderFunctionRegistry[config.slug];
-    if (!renderFunction) throw new Error("Unknown module: " + config.slug);
-    return new FastfetchModule({
-        ...config,
-        renderContent: renderFunction,
-    });
 };
