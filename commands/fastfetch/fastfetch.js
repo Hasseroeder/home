@@ -25,7 +25,7 @@ export function fastfetch({ wrapper, state } = {}) {
 
 const createFastfetchModule = (config) => {
     const renderFunction = renderFunctionRegistry[config.slug];
-    if (!renderFunction) throw new Error("Unknown module: " + config.slug);
+    if (!renderFunction) throw new Error(`Unknown module: ${config.slug}`);
     return new FastfetchModule({
         ...config,
         renderContent: renderFunction,
@@ -77,11 +77,9 @@ export class FastfetchLine {
     }
     remove() {
         this.wrapper.remove();
-        const toRemoveIdx = FastfetchKey.array.findIndex(
-            (key) => key === this.key,
-        );
-        if (toRemoveIdx !== -1) {
-            FastfetchKey.array.splice(toRemoveIdx, 1);
+        const i = FastfetchKey.array.indexOf(this.key);
+        if (i > -1) {
+            FastfetchKey.array.splice(i, 1);
             FastfetchKey.update();
         }
     }
@@ -91,7 +89,6 @@ class FastfetchValue {
     constructor({ textContent, href }) {
         if (href) {
             this.el = make("a", { textContent, href });
-            return this;
         }
         this.el = make("span", { textContent });
     }

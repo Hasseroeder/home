@@ -81,8 +81,8 @@ export const renderFunctionRegistry = {
                 textContent: "Konachan",
             },
             valueConfig: {
-                textContent: "https://konachan.net/post/show/" + imageData.id,
-                href: "https://konachan.net/post/show/" + imageData.id,
+                textContent: `https://konachan.net/post/show/${imageData.id}`,
+                href: `https://konachan.net/post/show/${imageData.id}`,
             },
         });
         this.el.append(sourceLine.wrapper, konachanLine.wrapper);
@@ -93,10 +93,7 @@ export const renderFunctionRegistry = {
         const line = new FastfetchLine({
             keyConfig: this.data.keyConfig,
             valueConfig: {
-                textContent:
-                    fingerPrintInfo.platform.type +
-                    " " +
-                    fingerPrintInfo.os.name.toLowerCase(),
+                textContent: `${fingerPrintInfo.platform.type} ${fingerPrintInfo.os.name.toLowerCase()}`,
             },
         });
         const OSicon = {
@@ -168,12 +165,7 @@ export const renderFunctionRegistry = {
         const line = new FastfetchLine({
             keyConfig: this.data.keyConfig,
             valueConfig: {
-                textContent:
-                    locationData.city +
-                    " " +
-                    locationData.region +
-                    " " +
-                    locationData.country,
+                textContent: `${locationData.city} ${locationData.region} ${locationData.country}`,
             },
         });
         this.el.append(line.wrapper);

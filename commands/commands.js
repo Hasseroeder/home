@@ -17,7 +17,7 @@ export const commandRegistry = [
         prettyName: "clear",
         aliases: ["c", "clear"],
         description: "clears up command history",
-        command: (wrapper) => {
+        command: ({ wrapper } = {}) => {
             wrapper.innerHTML = "";
         },
     },
@@ -40,20 +40,20 @@ export const commandRegistry = [
         description:
             'set a state value by path. Example: set config.autorun = ["fetch"]',
         command: ({ wrapper, argumentTokens } = {}) => {
-            const raw = argumentTokens.join(" ");
-            const parts = raw.split("=");
-            if (parts.length < 2) {
+            const raw = argumentTokens.join(" ").trim();
+            const [leftPart, ...rest] = raw.split("=");
+            if (!rest.length) {
                 wrapper.append(
                     new Line({ textContent: "usage: set path = jsonValue" }),
                 );
                 return;
             }
-            const left = parts.shift().trim();
-            const right = parts.join("=").trim();
+            const left = leftPart.trim();
+            const right = rest.join("=").trim();
             let value;
             try {
                 value = JSON.parse(right);
-            } catch (err) {
+            } catch (_) {
                 value = right;
             }
             setState(left, value);
