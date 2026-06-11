@@ -15,5 +15,5 @@ export function wikipedia({ wrapper, argumentTokens } = {}) {
             textContent: `Opening \"${url}\"`,
         }),
     );
-    window.open(url, "_blank");
+    window.open(url, "_self");
 }
