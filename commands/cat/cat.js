@@ -5,7 +5,7 @@ const anchors = [];
 
 export function cat({ wrapper, argumentTokens, state, input } = {}) {
     anchors.length = 0;
-    let columns = null,
+    let columns = [],
         colIdx = 0,
         rowIdx = -1;
 
@@ -118,7 +118,6 @@ export function cat({ wrapper, argumentTokens, state, input } = {}) {
     container.style.gridTemplateColumns = `repeat(${columnsCount}, minmax(0, 1fr))`;
 
     const chunkSize = Math.ceil(topEntries.length / columnsCount) || 1;
-    columns = [];
     for (let i = 0; i < columnsCount; i++) {
         const colEl = make("div");
         const slice = topEntries.slice(
