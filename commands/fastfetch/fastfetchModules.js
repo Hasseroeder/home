@@ -7,7 +7,6 @@ const weatherCodesPromise = loadJson("/media/weather_codes.json");
 // Simple localStorage caching helpers for fastfetch
 const CACHE_PREFIX = "fastfetch_cache_v1";
 const LOCATION_CACHE_KEY = `${CACHE_PREFIX}.location`;
-const WEATHER_CACHE_PREFIX = `${CACHE_PREFIX}.weather:`; // suffix with constructed URL
 const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
 function readCache(key) {
