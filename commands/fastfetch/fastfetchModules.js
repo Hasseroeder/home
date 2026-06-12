@@ -103,7 +103,7 @@ export const renderFunctionRegistry = {
         this.fetchImage = make("img", {
             className: "fastfetch-image",
             referrerPolicy: "no-referrer",
-            decoding: "async",
+            //decoding: "async",
         });
         context.fetchWrapper.prepend(this.fetchImage);
         let imageData = {
