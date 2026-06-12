@@ -125,3 +125,10 @@ a:hover {
 .search-section {
     color: lightgray;
 }
+.cat-wrapper {
+    display: grid;
+}
+.cat-wrapper > div {
+    display: flex;
+    flex-direction: column;
+}

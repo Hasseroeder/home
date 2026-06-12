@@ -2,105 +2,76 @@ import { Line } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
 
 const anchors = [];
-let idx;
-let columns = null;
-let _currentColumn = undefined;
-let colIdx = 0;
-let rowIdx = -1;
 
 export function cat({ wrapper, argumentTokens, state, input } = {}) {
     anchors.length = 0;
-    idx = -1;
+    let columns = null,
+        colIdx = 0,
+        rowIdx = -1;
 
     const columnsMode =
-        argumentTokens &&
-        argumentTokens[1] &&
-        argumentTokens[1].trim() === "|" &&
-        argumentTokens[2] &&
-        argumentTokens[2].trim() === "column";
+        argumentTokens[1]?.trim() === "|" &&
+        argumentTokens[2]?.trim() === "column";
     const columnsCount = columnsMode ? 6 : 1;
 
-    function listenForKeyboardNavigation(e) {
-        if (!anchors.length) return;
-        if (!e.ctrlKey) return input.focus();
+    const clamp = (v, a, b) => Math.max(a, Math.min(v, b));
 
-        const keys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
-        if (!keys.includes(e.key)) return;
-        e.preventDefault();
-
-        // infer current position from focused element when possible
-        const active = document.activeElement;
-        if (
-            active &&
-            active.classList &&
-            active.classList.contains("cat-link") &&
-            active.dataset.catCol != null
-        ) {
-            colIdx = Number(active.dataset.catCol);
-            rowIdx = Number(active.dataset.catRow);
+    const syncFromActive = () => {
+        const a = document.activeElement;
+        if (a?.classList?.contains("cat-link") && a.dataset.catCol != null) {
+            colIdx = +a.dataset.catCol;
+            rowIdx = +a.dataset.catRow;
         } else {
-            // initialize position
-            colIdx = Math.max(0, Math.min(colIdx, (columns || []).length - 1));
-            rowIdx = Math.max(
-                0,
-                Math.min(
-                    rowIdx,
-                    columns && columns[colIdx]
-                        ? columns[colIdx].length - 1
-                        : -1,
-                ),
-            );
+            colIdx = clamp(colIdx, 0, (columns || []).length - 1);
+            rowIdx = clamp(rowIdx, 0, columns?.[colIdx]?.length ?? -1);
+        }
+    };
+
+    function onKey(e) {
+        if (!anchors.length) return;
+        if (!e.ctrlKey) return input?.focus();
+        if (
+            !["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(e.key)
+        )
+            return;
+        e.preventDefault();
+        syncFromActive();
+
+        if (
+            e.key === "ArrowDown" &&
+            columns[colIdx] &&
+            rowIdx < columns[colIdx].length - 1
+        )
+            rowIdx++;
+        else if (e.key === "ArrowUp" && rowIdx > 0) rowIdx--;
+        else if (e.key === "ArrowRight" && colIdx < columns.length - 1) {
+            colIdx++;
+            rowIdx = Math.max(0, Math.min(rowIdx, columns[colIdx].length - 1));
+        } else if (e.key === "ArrowLeft" && colIdx > 0) {
+            colIdx--;
+            rowIdx = Math.max(0, Math.min(rowIdx, columns[colIdx].length - 1));
         }
 
-        if (e.key === "ArrowDown") {
-            if (columns[colIdx] && rowIdx < columns[colIdx].length - 1)
-                rowIdx++;
-        } else if (e.key === "ArrowUp") {
-            if (rowIdx > 0) rowIdx--;
-        } else if (e.key === "ArrowRight") {
-            if (colIdx < columns.length - 1) {
-                colIdx++;
-                rowIdx = Math.min(rowIdx, columns[colIdx].length - 1);
-                if (rowIdx < 0) rowIdx = 0;
-            }
-        } else if (e.key === "ArrowLeft") {
-            if (colIdx > 0) {
-                colIdx--;
-                rowIdx = Math.min(rowIdx, columns[colIdx].length - 1);
-                if (rowIdx < 0) rowIdx = 0;
-            }
-        }
-
-        const el = columns[colIdx] && columns[colIdx][rowIdx];
+        const el = columns?.[colIdx]?.[rowIdx];
         if (el) {
             el.focus();
             el.scrollIntoView({ block: "nearest", inline: "nearest" });
         }
-        return;
     }
+    document.addEventListener("keydown", onKey);
 
-    document.addEventListener("keydown", listenForKeyboardNavigation);
-
-    const observer = new MutationObserver((records) => {
-        for (const record of records) {
-            if (record.target === wrapper) {
-                document.removeEventListener(
-                    "keydown",
-                    listenForKeyboardNavigation,
-                );
-                observer.disconnect();
-            }
+    const obs = new MutationObserver((records) => {
+        if (records.some((r) => r.target === wrapper)) {
+            document.removeEventListener("keydown", onKey);
+            obs.disconnect();
         }
     });
 
-    // keep position state in sync when anchors are focused (click/tab)
     document.addEventListener("focusin", (e) => {
         const t = e.target;
-        if (!t || !t.classList) return;
-        if (!t.classList.contains("cat-link")) return;
-        if (t.dataset.catCol != null) {
-            colIdx = Number(t.dataset.catCol);
-            rowIdx = Number(t.dataset.catRow);
+        if (t?.classList?.contains("cat-link") && t.dataset.catCol != null) {
+            colIdx = +t.dataset.catCol;
+            rowIdx = +t.dataset.catRow;
         }
     });
 
@@ -110,68 +81,54 @@ export function cat({ wrapper, argumentTokens, state, input } = {}) {
         return;
     }
 
-    const files = state?.cattableFiles || [];
-    const file = files.find((f) => f.name === name);
+    const file = (state?.cattableFiles || []).find((f) => f.name === name);
     if (!file) {
         wrapper?.append(new Line({ textContent: `${name} - No such file` }));
         return;
     }
 
-    const printEntry = (entry, depth = 0, localWrapper = wrapper) => {
-        const href = entry.href || "";
-        const text = entry.text || "";
+    const printEntry = (entry, depth = 0, localWrapper, currentCol) => {
         const lineEl = make("div", { className: "command-line" });
-        lineEl.style.paddingLeft = `${depth * 1}rem`;
-        if (href) {
-            const anchor = make("a", { href, textContent: text });
-            anchor.className = "cat-link";
-            anchors.push(anchor);
-            if (typeof _currentColumn === "number") {
-                columns[_currentColumn] = columns[_currentColumn] || [];
-                anchor.dataset.catCol = String(_currentColumn);
-                anchor.dataset.catRow = String(columns[_currentColumn].length);
-                columns[_currentColumn].push(anchor);
+        lineEl.style.paddingLeft = `${depth}rem`;
+        if (entry.href) {
+            const a = make("a", {
+                href: entry.href,
+                textContent: entry.text || "",
+            });
+            a.className = "cat-link";
+            anchors.push(a);
+            if (typeof currentCol === "number") {
+                columns[currentCol] = columns[currentCol] || [];
+                a.dataset.catCol = String(currentCol);
+                a.dataset.catRow = String(columns[currentCol].length);
+                columns[currentCol].push(a);
             }
-            lineEl.append(anchor);
+            lineEl.append(a);
         } else {
-            lineEl.textContent = text;
+            lineEl.textContent = entry.text || "";
         }
         localWrapper?.append(lineEl);
-        if (entry.entries && entry.entries.length) {
-            entry.entries.forEach((e) =>
-                printEntry(e, depth + 1, localWrapper),
-            );
-        }
+        (entry.entries || []).forEach((child) =>
+            printEntry(child, depth + 1, localWrapper, currentCol),
+        );
     };
 
     const topEntries = file.entries || [];
-    const container = make("div");
-    Object.assign(container.style, {
-        display: "grid",
-        gridTemplateColumns: `repeat(${columnsCount}, minmax(0, 1fr))`,
-    });
+    const container = make("div", { className: "cat-wrapper" });
+    container.style.gridTemplateColumns = `repeat(${columnsCount}, minmax(0, 1fr))`;
 
     const chunkSize = Math.ceil(topEntries.length / columnsCount) || 1;
     columns = [];
     for (let i = 0; i < columnsCount; i++) {
-        const start = i * chunkSize;
-        const colEntries = topEntries.slice(start, start + chunkSize);
         const colEl = make("div");
-        Object.assign(colEl.style, {
-            display: "flex",
-            flexDirection: "column",
-        });
-        _currentColumn = i;
-        colEntries.forEach((e) => printEntry(e, 0, colEl));
-        _currentColumn = undefined;
+        const slice = topEntries.slice(
+            i * chunkSize,
+            i * chunkSize + chunkSize,
+        );
+        slice.forEach((e) => printEntry(e, 0, colEl, i));
         container.append(colEl);
     }
     wrapper?.append(container);
 
-    observer.observe(wrapper, {
-        childList: true,
-        subtree: true,
-        attributes: false,
-        characterData: false,
-    });
+    obs.observe(wrapper, { childList: true, subtree: true });
 }
