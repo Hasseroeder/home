@@ -1,6 +1,52 @@
 {
     "autorun": ["updateFingerprinting", "fastfetch"],
     "userName": "user",
+    "cattableFiles": [
+        {
+            "name": "links.txt",
+            "entries": [
+                {
+                    "text": "GitHub",
+                    "url": "https://www.github.com",
+                    "entries": [
+                        {
+                            "text": "Hasseroeder",
+                            "url": "https://github.com/Hasseroeder",
+                            "entries": [
+                                {
+                                    "text": "Basement",
+                                    "url": "https://github.com/Hasseroeder/Basement"
+                                },
+                                {
+                                    "text": "dotfiles",
+                                    "url": "https://github.com/Hasseroeder/dotfiles"
+                                },
+                                {
+                                    "text": "Agapanthus",
+                                    "url": "https://github.com/Hasseroeder/Agapanthus"
+                                },
+                                {
+                                    "text": "home",
+                                    "url": "https://github.com/Hasseroeder/home"
+                                }
+                            ]
+                        },
+                        {
+                            "text": "Coopw1",
+                            "url": "https://github.com/coopw1",
+                            "entries": [
+                                {
+                                    "text": "website",
+                                    "url": "https://github.com/coopw1/website"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "text": "Reddit", "url": "https://www.reddit.com" }
+            ]
+        }
+    ],
     "fetchModules": [
         {
             "slug": "hostname",
