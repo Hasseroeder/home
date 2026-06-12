@@ -4,7 +4,7 @@ import { fastfetch } from "/commands/fastfetch/fastfetch.js";
 import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
-import { createTuiCommand } from "/commands/tui/tui.js";
+import { createSearchCommand } from "/commands/search/search.js";
 
 const SEARCH_ENGINES = {
     youtube: (q) =>
@@ -147,6 +147,6 @@ export const commandRegistry = [
         aliases: ["tui", "terminal"],
         description:
             "open fake TUI search (Esc to close, Tab to change engine)",
-        command: createTuiCommand(SEARCH_ENGINES),
+        command: createSearchCommand(SEARCH_ENGINES),
     },
 ];

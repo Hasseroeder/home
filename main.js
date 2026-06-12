@@ -23,9 +23,9 @@ function handleDocumentClick(e) {
     )
         return;
 
-    const tuiInput = document.querySelector(".tui-root input");
-    if (tuiInput) {
-        tuiInput.focus();
+    const searchInput = document.querySelector(".search-root input");
+    if (searchInput) {
+        searchInput.focus();
         return;
     }
     input.focus();
