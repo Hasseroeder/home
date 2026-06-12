@@ -63,6 +63,17 @@ export const renderFunctionRegistry = {
                 },
             );
             imageData = await antix1Fetch.json();
+            const antix1ImageFetch = await fetch(
+                "https://antix1.transaero.space/api" + imageData.id,
+                {
+                    method: "GET",
+                    headers: {
+                        "x-api-key": "my_super_duper_mega_ultra_secure_API_key",
+                    },
+                },
+            );
+            const imageBlob = await antix1ImageFetch.blob();
+            this.fetchImage.src = URL.createObjectURL(imageBlob);
         } catch {}
 
         const sourceLine = new FastfetchLine(
