@@ -42,6 +42,7 @@ function handleInputKeyDown(event) {
     }
 
     // handle history navigation
+    if (event.ctrlKey) return;
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         event.preventDefault();
         navigateHistory(event.key === "ArrowUp");
