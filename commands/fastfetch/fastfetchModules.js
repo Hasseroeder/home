@@ -64,7 +64,7 @@ export const renderFunctionRegistry = {
             );
             imageData = await antix1Fetch.json();
             const antix1ImageFetch = await fetch(
-                "https://antix1.transaero.space/api" + imageData.id,
+                "https://antix1.transaero.space/images/" + imageData.id,
                 {
                     method: "GET",
                     headers: {
@@ -103,7 +103,6 @@ export const renderFunctionRegistry = {
             context.keyManager,
         );
         this.el.append(sourceLine.wrapper, konachanLine.wrapper);
-        this.fetchImage.src = imageData.src;
     },
     os: async function (context) {
         const fingerPrintInfo = context.state.fingerPrintInfo;
