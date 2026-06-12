@@ -59,31 +59,28 @@ function navigateHistory(isUp) {
 
     if (isUp) {
         // starting navigation: stash current input
-        if (idx === -1) setRuntime("commandHistoryTemp", input.value || "");
+        //if (idx === -1) setRuntime("commandHistoryTemp", input.value || "");
         if (idx === -1) idx = cmdHistory.length;
-        if (idx > 0) idx -= 1;
+        if (idx > 0) idx--;
         setRuntime("commandHistoryIndex", idx);
         input.value = cmdHistory[idx] || "";
-        input.setSelectionRange(input.value.length, input.value.length);
         return;
     }
 
     // ArrowDown
     if (idx === -1) return;
     if (idx < cmdHistory.length - 1) {
-        idx += 1;
+        idx++;
         setRuntime("commandHistoryIndex", idx);
         input.value = cmdHistory[idx] || "";
-        input.setSelectionRange(input.value.length, input.value.length);
         return;
     }
 
     // moved past the newest entry: restore temp and reset cursor
     const temp = state?.commandHistoryTemp || "";
     setRuntime("commandHistoryIndex", -1);
-    setRuntime("commandHistoryTemp", "");
+    //setRuntime("commandHistoryTemp", "");
     input.value = temp;
-    input.setSelectionRange(input.value.length, input.value.length);
 }
 
 function runCommand(cmd) {
@@ -93,7 +90,7 @@ function runCommand(cmd) {
         const deduped = prev.filter((c) => c !== cmd);
         setRuntime("commandHistory", [...deduped, cmd]);
         setRuntime("commandHistoryIndex", -1);
-        setRuntime("commandHistoryTemp", "");
+        //setRuntime("commandHistoryTemp", "");
     } catch {}
 
     history.append(new Prompt({ hostname: state?.hostname, command: cmd }).el);
