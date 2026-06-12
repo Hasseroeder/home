@@ -58,8 +58,6 @@ function navigateHistory(isUp) {
     let idx = state?.commandHistoryIndex ?? -1;
 
     if (isUp) {
-        // starting navigation: stash current input
-        //if (idx === -1) setRuntime("commandHistoryTemp", input.value || "");
         if (idx === -1) idx = cmdHistory.length;
         if (idx > 0) idx--;
         setRuntime("commandHistoryIndex", idx);
@@ -79,18 +77,15 @@ function navigateHistory(isUp) {
     // moved past the newest entry: restore temp and reset cursor
     const temp = state?.commandHistoryTemp || "";
     setRuntime("commandHistoryIndex", -1);
-    //setRuntime("commandHistoryTemp", "");
     input.value = temp;
 }
 
 function runCommand(cmd) {
     try {
         const prev = state?.commandHistory || [];
-        // keep only the latest instance of the command
         const deduped = prev.filter((c) => c !== cmd);
         setRuntime("commandHistory", [...deduped, cmd]);
         setRuntime("commandHistoryIndex", -1);
-        //setRuntime("commandHistoryTemp", "");
     } catch {}
 
     history.append(new Prompt({ hostname: state?.hostname, command: cmd }).el);
