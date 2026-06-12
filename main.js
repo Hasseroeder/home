@@ -87,13 +87,27 @@ function navigateHistory(isUp) {
 }
 
 function runCommand(cmd) {
-    history.append(new Prompt({ hostname: state?.hostname, command: cmd }).el);
+    // remove previous prompt DOM entries and Prompt instances for this exact command
+    try {
+        Prompt.array = Prompt.array.filter((p) => {
+            if (p.commandSpan && p.commandSpan.textContent === cmd) {
+                if (p.el && p.el.remove) p.el.remove();
+                return false;
+            }
+            return true;
+        });
+    } catch {}
+
     try {
         const prev = state?.commandHistory || [];
-        setRuntime("commandHistory", [...prev, cmd]);
+        // keep only the latest instance of the command
+        const deduped = prev.filter((c) => c !== cmd);
+        setRuntime("commandHistory", [...deduped, cmd]);
         setRuntime("commandHistoryIndex", -1);
         setRuntime("commandHistoryTemp", "");
     } catch {}
+
+    history.append(new Prompt({ hostname: state?.hostname, command: cmd }).el);
 
     const [name, ...args] = cmd.split(/\s+/);
 
