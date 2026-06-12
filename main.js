@@ -1,7 +1,7 @@
 import { make } from "/jsUtils/injectionUtil.js";
 import { Prompt } from "/lineUtil.js";
 import { commandRegistry } from "/commands/commands.js";
-import { initState, getState } from "/jsUtils/stateManager.js";
+import { initState, getState, setRuntime } from "/jsUtils/stateManager.js";
 
 const initStatePromise = initState();
 
@@ -33,16 +33,67 @@ function handleDocumentClick(e) {
 document.addEventListener("click", handleDocumentClick);
 
 function handleInputKeyDown(event) {
-    if (event.key !== "Enter") return;
-    const inputStr = event.target.value.trim();
-    event.target.value = "";
-    if (!inputStr) return;
-    runCommand(inputStr);
+    // handle enter
+    if (event.key === "Enter") {
+        const inputStr = event.target.value.trim();
+        event.target.value = "";
+        if (!inputStr) return;
+        runCommand(inputStr);
+        return;
+    }
+
+    // handle history navigation
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+        event.preventDefault();
+        navigateHistory(event.key === "ArrowUp");
+        return;
+    }
 }
 input.addEventListener("keydown", handleInputKeyDown);
 
+function navigateHistory(isUp) {
+    const cmdHistory = state?.commandHistory || [];
+    if (!cmdHistory || !cmdHistory.length) return;
+
+    let idx = state?.commandHistoryIndex ?? -1;
+
+    if (isUp) {
+        // starting navigation: stash current input
+        if (idx === -1) setRuntime("commandHistoryTemp", input.value || "");
+        if (idx === -1) idx = cmdHistory.length;
+        if (idx > 0) idx -= 1;
+        setRuntime("commandHistoryIndex", idx);
+        input.value = cmdHistory[idx] || "";
+        input.setSelectionRange(input.value.length, input.value.length);
+        return;
+    }
+
+    // ArrowDown
+    if (idx === -1) return;
+    if (idx < cmdHistory.length - 1) {
+        idx += 1;
+        setRuntime("commandHistoryIndex", idx);
+        input.value = cmdHistory[idx] || "";
+        input.setSelectionRange(input.value.length, input.value.length);
+        return;
+    }
+
+    // moved past the newest entry: restore temp and reset cursor
+    const temp = state?.commandHistoryTemp || "";
+    setRuntime("commandHistoryIndex", -1);
+    setRuntime("commandHistoryTemp", "");
+    input.value = temp;
+    input.setSelectionRange(input.value.length, input.value.length);
+}
+
 function runCommand(cmd) {
     history.append(new Prompt({ hostname: state?.hostname, command: cmd }).el);
+    try {
+        const prev = state?.commandHistory || [];
+        setRuntime("commandHistory", [...prev, cmd]);
+        setRuntime("commandHistoryIndex", -1);
+        setRuntime("commandHistoryTemp", "");
+    } catch {}
 
     const [name, ...args] = cmd.split(/\s+/);
 
