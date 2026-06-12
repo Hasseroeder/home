@@ -22,6 +22,12 @@ function handleDocumentClick(e) {
         el.closest("a, button, input, textarea, select, [tabindex]")
     )
         return;
+
+    const tuiInput = document.querySelector(".tui-root input");
+    if (tuiInput) {
+        tuiInput.focus();
+        return;
+    }
     input.focus();
 }
 document.addEventListener("click", handleDocumentClick);

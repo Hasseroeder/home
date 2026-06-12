@@ -4,6 +4,7 @@ import { fastfetch } from "/commands/fastfetch/fastfetch.js";
 import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
+import { createTuiCommand } from "/commands/tui/tui.js";
 
 const SEARCH_ENGINES = {
     youtube: (q) =>
@@ -140,5 +141,12 @@ export const commandRegistry = [
         aliases: ["arch_linux_wiki", "a", "!a"],
         description: "search ArchWiki for results",
         command: makeSearchCommand(SEARCH_ENGINES.arch_linux_wiki),
+    },
+    {
+        name: "tui",
+        aliases: ["tui", "terminal"],
+        description:
+            "open fake TUI search (Esc to close, Tab to change engine)",
+        command: createTuiCommand(SEARCH_ENGINES),
     },
 ];
