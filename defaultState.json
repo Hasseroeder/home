@@ -1,6 +1,7 @@
 {
     "autorun": ["updateFingerprinting", "fastfetch", "cat links.txt | column"],
     "userName": "user",
+    "hostName": "user@browser",
     "cattableFiles": [
         {
             "name": "links.txt",
