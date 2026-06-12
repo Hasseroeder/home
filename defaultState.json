@@ -1,5 +1,5 @@
 {
-    "autorun": ["updateFingerprinting", "fastfetch"],
+    "autorun": ["updateFingerprinting", "fastfetch", "cat links.txt | column"],
     "userName": "user",
     "cattableFiles": [
         {
