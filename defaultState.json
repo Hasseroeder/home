@@ -7,43 +7,43 @@
             "entries": [
                 {
                     "text": "GitHub",
-                    "url": "https://www.github.com",
+                    "href": "https://www.github.com",
                     "entries": [
                         {
                             "text": "Hasseroeder",
-                            "url": "https://github.com/Hasseroeder",
+                            "href": "https://github.com/Hasseroeder",
                             "entries": [
                                 {
                                     "text": "Basement",
-                                    "url": "https://github.com/Hasseroeder/Basement"
+                                    "href": "https://github.com/Hasseroeder/Basement"
                                 },
                                 {
                                     "text": "dotfiles",
-                                    "url": "https://github.com/Hasseroeder/dotfiles"
+                                    "href": "https://github.com/Hasseroeder/dotfiles"
                                 },
                                 {
                                     "text": "Agapanthus",
-                                    "url": "https://github.com/Hasseroeder/Agapanthus"
+                                    "href": "https://github.com/Hasseroeder/Agapanthus"
                                 },
                                 {
                                     "text": "home",
-                                    "url": "https://github.com/Hasseroeder/home"
+                                    "href": "https://github.com/Hasseroeder/home"
                                 }
                             ]
                         },
                         {
                             "text": "Coopw1",
-                            "url": "https://github.com/coopw1",
+                            "href": "https://github.com/coopw1",
                             "entries": [
                                 {
                                     "text": "website",
-                                    "url": "https://github.com/coopw1/website"
+                                    "href": "https://github.com/coopw1/website"
                                 }
                             ]
                         }
                     ]
                 },
-                { "text": "Reddit", "url": "https://www.reddit.com" }
+                { "text": "Reddit", "href": "https://www.reddit.com" }
             ]
         }
     ],
