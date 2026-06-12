@@ -5,6 +5,7 @@ import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
+import { cat } from "/commands/cat/cat.js";
 import { SEARCH_ENGINES, search } from "/commands/search/search.js";
 
 const makeSearchCommand =
@@ -89,59 +90,8 @@ export const commandRegistry = [
         name: "cat",
         aliases: ["cat"],
         description: "print cattable file contents",
-        command: ({ wrapper, argumentTokens, state } = {}) => {
-            const name = (argumentTokens || []).join(" ").trim();
-            if (!name) {
-                wrapper?.append(
-                    new Line({ textContent: "usage: cat <filename>" }),
-                );
-                return;
-            }
-
-            const files = state?.cattableFiles || [];
-            const file = files.find((f) => f.name === name);
-            if (!file) {
-                wrapper?.append(
-                    new Line({ textContent: `cat: ${name}: No such file` }),
-                );
-                return;
-            }
-            const catGroupId = `cat-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
-            const anchors = [];
-
-            const printEntry = (entry, depth = 0) => {
-                const href = entry.href || "";
-                const text = entry.text || "";
-                const lineEl = make("div", { className: "command-line" });
-                lineEl.style.paddingLeft = `${depth * 1}rem`;
-                lineEl.dataset.catGroup = catGroupId;
-                if (href) {
-                    const anchor = make("a", { href, textContent: text });
-                    anchor.className = "cat-link";
-                    anchor.dataset.catGroup = catGroupId;
-                    anchor.dataset.catIndex = anchors.length;
-                    anchors.push(anchor);
-                    lineEl.append(anchor);
-                } else {
-                    lineEl.textContent = text;
-                }
-                wrapper?.append(lineEl);
-                if (entry.entries && entry.entries.length) {
-                    entry.entries.forEach((e) => printEntry(e, depth + 1));
-                }
-            };
-
-            (file.entries || []).forEach((e) => printEntry(e, 0));
-
-            // expose latest cat anchors for keyboard navigation
-            try {
-                window.latestCatGroupId = catGroupId;
-                window.latestCatAnchors = anchors;
-                window.latestCatIndex = -1;
-            } catch (_) {}
-        },
+        command: cat,
     },
-
     {
         name: "youtube",
         aliases: ["youtube", "y", "!y"],
