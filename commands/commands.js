@@ -92,14 +92,18 @@ export const commandRegistry = [
         command: ({ wrapper, argumentTokens, state } = {}) => {
             const name = (argumentTokens || []).join(" ").trim();
             if (!name) {
-                wrapper?.append(new Line({ textContent: "usage: cat <filename>" }));
+                wrapper?.append(
+                    new Line({ textContent: "usage: cat <filename>" }),
+                );
                 return;
             }
 
             const files = state?.cattableFiles || [];
             const file = files.find((f) => f.name === name);
             if (!file) {
-                wrapper?.append(new Line({ textContent: `cat: ${name}: No such file` }));
+                wrapper?.append(
+                    new Line({ textContent: `cat: ${name}: No such file` }),
+                );
                 return;
             }
             const catGroupId = `cat-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
