@@ -87,17 +87,6 @@ function navigateHistory(isUp) {
 }
 
 function runCommand(cmd) {
-    // remove previous prompt DOM entries and Prompt instances for this exact command
-    try {
-        Prompt.array = Prompt.array.filter((p) => {
-            if (p.commandSpan && p.commandSpan.textContent === cmd) {
-                if (p.el && p.el.remove) p.el.remove();
-                return false;
-            }
-            return true;
-        });
-    } catch {}
-
     try {
         const prev = state?.commandHistory || [];
         // keep only the latest instance of the command
