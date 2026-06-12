@@ -37,7 +37,7 @@ export function nano({ input } = {}) {
         URL.revokeObjectURL(url);
     });
 
-    overlay.addEventListener("keydown", (e) => {
+    const shortcutListener = (e) => {
         if (!e.ctrlKey) return;
         const k = (e.key || "").toLowerCase();
         if (k === "s") {
@@ -50,10 +50,13 @@ export function nano({ input } = {}) {
             e.preventDefault();
             btnCancel.click();
         }
-    });
+    };
+
+    document.addEventListener("keydown", shortcutListener);
 
     function close() {
         overlay.remove();
         input?.focus();
+        document.removeEventListener("keydown", shortcutListener);
     }
 }
