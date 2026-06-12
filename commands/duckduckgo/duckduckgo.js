@@ -2,14 +2,13 @@ import { Line } from "/lineUtil.js";
 
 export function duckduckgo({ wrapper, argumentTokens } = {}) {
     const query = argumentTokens.join(" ").trim();
+    let url;
     if (!query) {
-        wrapper?.append(
-            new Line({ textContent: "usage: duckduckgo search terms" }),
-        );
-        return;
+        url = "https://duckduckgo.com";
+    } else {
+        const safeQuery = encodeURIComponent(query);
+        url = `https://duckduckgo.com/?q=${safeQuery}`;
     }
-    const safeQuery = encodeURIComponent(query);
-    const url = `https://duckduckgo.com/?q=${safeQuery}`;
     wrapper?.append(
         new Line({
             textContent: `Opening \"${url}\"`,
