@@ -1,14 +1,41 @@
 import { printHelp } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
-import { youtube } from "/commands/youtube/youtube.js";
-import { duckduckgo } from "/commands/duckduckgo/duckduckgo.js";
-import { google } from "/commands/google/google.js";
-import { wikipedia } from "/commands/wikipedia/wikipedia.js";
-import { archwiki } from "/commands/archwiki/archwiki.js";
 import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
+
+const SEARCH_ENGINES = {
+    youtube: (q) =>
+        q
+            ? `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
+            : "https://www.youtube.com",
+    duckduckgo: (q) =>
+        q
+            ? `https://duckduckgo.com/?q=${encodeURIComponent(q)}`
+            : "https://duckduckgo.com",
+    google: (q) =>
+        q
+            ? `https://www.google.com/search?q=${encodeURIComponent(q)}`
+            : "https://www.google.com",
+    wikipedia: (q) =>
+        q
+            ? `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(q)}`
+            : "https://en.wikipedia.org",
+    arch_linux_wiki: (q) =>
+        q
+            ? `https://wiki.archlinux.org/index.php?search=${encodeURIComponent(q)}`
+            : "https://wiki.archlinux.org",
+};
+
+const makeSearchCommand =
+    (searchFn) =>
+    ({ wrapper, argumentTokens } = {}) => {
+        const query = (argumentTokens || []).join(" ").trim();
+        const url = searchFn(query);
+        wrapper?.append(new Line({ textContent: `Opening "${url}"` }));
+        window.open(url, "_self");
+    };
 
 const clearCommand = ({ wrapper } = {}) => wrapper && (wrapper.innerHTML = "");
 
@@ -79,34 +106,39 @@ export const commandRegistry = [
         description: "restore persistent state to default and reload",
         command: resetPersistent,
     },
+
     {
         name: "youtube",
         aliases: ["youtube", "y", "!y"],
         description: "search YouTube for videos",
-        command: youtube,
+        engine: "youtube",
+        command: makeSearchCommand(SEARCH_ENGINES.youtube),
     },
     {
         name: "duckduckgo",
         aliases: ["duckduckgo", "d", "!d"],
         description: "search DuckDuckGo for results",
-        command: duckduckgo,
+        engine: "duckduckgo",
+        command: makeSearchCommand(SEARCH_ENGINES.duckduckgo),
     },
     {
         name: "google",
         aliases: ["google", "g", "!g"],
         description: "search Google for results",
-        command: google,
+        engine: "google",
+        command: makeSearchCommand(SEARCH_ENGINES.google),
     },
     {
         name: "wikipedia",
         aliases: ["wikipedia", "w", "!w"],
         description: "search Wikipedia for results",
-        command: wikipedia,
+        engine: "wikipedia",
+        command: makeSearchCommand(SEARCH_ENGINES.wikipedia),
     },
     {
-        name: "archlinux wiki",
-        aliases: ["archwiki", "a", "!a"],
+        name: "arch_linux_wiki",
+        aliases: ["arch_linux_wiki", "a", "!a"],
         description: "search ArchWiki for results",
-        command: archwiki,
+        command: makeSearchCommand(SEARCH_ENGINES.arch_linux_wiki),
     },
 ];
