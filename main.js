@@ -3,8 +3,8 @@ import { Prompt } from "/lineUtil.js";
 import { commandRegistry } from "/commands/commands.js";
 import { initState, getState } from "/jsUtils/stateManager.js";
 
-await initState();
-const state = getState();
+const initStatePromise = initState();
+
 const bodyWrapper = document.querySelector(".body-wrapper");
 const history = document.querySelector(".command-history");
 const input = make("input", { type: "text" });
@@ -36,7 +36,7 @@ function handleInputKeyDown(event) {
 input.addEventListener("keydown", handleInputKeyDown);
 
 function runCommand(cmd) {
-    history.append(new Prompt({ hostname: state.hostname, command: cmd }).el);
+    history.append(new Prompt({ hostname: state?.hostname, command: cmd }).el);
 
     const [name, ...args] = cmd.split(/\s+/);
 
@@ -52,5 +52,7 @@ function runCommand(cmd) {
     input.scrollIntoView();
 }
 
+await initStatePromise;
+const state = getState();
 state.autorun.forEach(runCommand);
 input.focus();
