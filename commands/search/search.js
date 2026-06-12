@@ -48,7 +48,7 @@ export function search({ wrapper, input } = {}) {
         textContent: "      first/last:     [ page up, page down ]",
     });
     const controls3 = new Line({
-        textContent: "      exit:           [ ctrl + c ] or [ esc ]",
+        textContent: "      exit:           [ ctrl + c ], [ esc ]",
     });
 
     // Engines list
