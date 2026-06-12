@@ -4,30 +4,7 @@ import { fastfetch } from "/commands/fastfetch/fastfetch.js";
 import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
-import { createSearchCommand } from "/commands/search/search.js";
-
-const SEARCH_ENGINES = {
-    youtube: (q) =>
-        q
-            ? `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
-            : "https://www.youtube.com",
-    duckduckgo: (q) =>
-        q
-            ? `https://duckduckgo.com/?q=${encodeURIComponent(q)}`
-            : "https://duckduckgo.com",
-    google: (q) =>
-        q
-            ? `https://www.google.com/search?q=${encodeURIComponent(q)}`
-            : "https://www.google.com",
-    wikipedia: (q) =>
-        q
-            ? `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(q)}`
-            : "https://en.wikipedia.org",
-    arch_linux_wiki: (q) =>
-        q
-            ? `https://wiki.archlinux.org/index.php?search=${encodeURIComponent(q)}`
-            : "https://wiki.archlinux.org",
-};
+import { SEARCH_ENGINES, search } from "/commands/search/search.js";
 
 const makeSearchCommand =
     (searchFn) =>
@@ -143,10 +120,9 @@ export const commandRegistry = [
         command: makeSearchCommand(SEARCH_ENGINES.arch_linux_wiki),
     },
     {
-        name: "tui",
-        aliases: ["tui", "terminal"],
-        description:
-            "open fake TUI search (Esc to close, Tab to change engine)",
-        command: createSearchCommand(SEARCH_ENGINES),
+        name: "search",
+        aliases: ["search", "s", "!"],
+        description: "open fake TUI search",
+        command: search,
     },
 ];

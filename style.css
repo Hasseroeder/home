@@ -111,3 +111,17 @@ a:hover {
 .state-editor-modal button:hover {
     background: #333;
 }
+
+.search-selected {
+    color: #9ad;
+    font-weight: 700;
+}
+.search-engines .command-line {
+    white-space: pre;
+}
+.search-header {
+    color: lightgray;
+}
+.search-section {
+    color: lightgray;
+}
