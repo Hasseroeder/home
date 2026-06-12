@@ -88,7 +88,7 @@ function runCommand(cmd) {
         setRuntime("commandHistoryIndex", -1);
     } catch {}
 
-    history.append(new Prompt({ hostname: state?.hostname, command: cmd }).el);
+    history.append(new Prompt({ hostName: state?.hostName, command: cmd }).el);
 
     const [name, ...args] = cmd.split(/\s+/);
 

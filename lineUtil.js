@@ -9,15 +9,15 @@ export class Line {
 export class Prompt {
     static array = [];
     constructor({
-        hostname = "user",
+        hostName = "user",
         directory = "~",
         prompt = ">",
         command = "",
         child = "",
         className = "command-line",
     }) {
-        this.hostnameSpan = make("span", {
-            textContent: hostname,
+        this.hostNameSpan = make("span", {
+            textContent: hostName,
         });
         this.directorySpan = make("span", {
             textContent: directory,
@@ -30,7 +30,7 @@ export class Prompt {
         });
 
         this.el = make("div", { className }, [
-            this.hostnameSpan,
+            this.hostNameSpan,
             make("span", { textContent: " " }),
             this.directorySpan,
             make("span", { textContent: " " }),
@@ -43,7 +43,7 @@ export class Prompt {
 
         Prompt.array.push(this);
     }
-    set hostname(string) {
-        this.hostnameSpan.textContent = string;
+    set hostName(string) {
+        this.hostNameSpan.textContent = string;
     }
 }

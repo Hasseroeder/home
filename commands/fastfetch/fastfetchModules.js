@@ -89,11 +89,11 @@ export const renderFunctionRegistry = {
             }),
         );
     },
-    hostname: async function (context) {
+    hostName: async function (context) {
         this.el.append(
             make("span", {
                 className: "command-line",
-                textContent: context.state.hostname,
+                textContent: context.state.hostName,
             }),
         );
     },

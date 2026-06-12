@@ -67,7 +67,7 @@ export function search({ wrapper, input } = {}) {
     queryTitle.classList.add("search-section");
     const inputEl = make("input", { type: "text" });
     const promptWrapper = new Prompt({
-        hostname: "      user@search",
+        hostName: "      user@search",
         directory: "~",
         prompt: ">",
         command: "",

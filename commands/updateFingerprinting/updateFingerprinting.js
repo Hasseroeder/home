@@ -8,14 +8,14 @@ export function updateFingerprinting({ state } = {}) {
     };
     setRuntime("fingerPrintInfo", fp);
 
-    const hostname =
+    const hostName =
         (state && state.userName ? state.userName : "") +
         "@" +
         fp.browser.name.toLowerCase() +
         "-" +
         fp.browser.version.split(".")[0];
 
-    setRuntime("hostname", hostname);
+    setRuntime("hostName", hostName);
 
-    Prompt.array.forEach((prompt) => (prompt.hostname = hostname));
+    Prompt.array.forEach((prompt) => (prompt.hostName = hostName));
 }

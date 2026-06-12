@@ -139,7 +139,7 @@
     ],
     "fetchModules": [
         {
-            "slug": "hostname",
+            "slug": "hostName",
             "data": {}
         },
         {
