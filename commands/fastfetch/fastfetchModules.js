@@ -7,6 +7,7 @@ const weatherCodesPromise = loadJson("/media/weather_codes.json");
 // Simple localStorage caching helpers for fastfetch
 const CACHE_PREFIX = "fastfetch_cache_v1";
 const LOCATION_CACHE_KEY = `${CACHE_PREFIX}.location`;
+const WEATHER_CACHE_KEY = `${CACHE_PREFIX}.weather`;
 const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
 function readCache(key) {
@@ -32,6 +33,19 @@ function writeCache(key, data) {
         localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
     } catch (err) {
         console.error("fastfetch cache write error:", err);
+    }
+}
+
+function getCachedWeather() {
+    return readCache(WEATHER_CACHE_KEY);
+}
+
+function writeWeatherCache(label, data) {
+    try {
+        // store only label + weather data (do not include lat/long)
+        writeCache(WEATHER_CACHE_KEY, { label, data });
+    } catch (err) {
+        console.error("fastfetch weather cache write error:", err);
     }
 }
 
@@ -296,6 +310,43 @@ export const renderFunctionRegistry = {
         });
         this.el.append(header);
         this.el.append(this.progressLine.wrapper);
+        const cached = getCachedWeather();
+        this._cachedWeatherWrappers = [];
+        if (cached && cached.data) {
+            header.textContent = `Weather for ${cached.label} (cached)`;
+            const weatherCodes = await weatherCodesPromise;
+            const dailyData = cached.data;
+            (dailyData.time || []).forEach((day, i) => {
+                const date = new Date(day);
+                const weatherCode = weatherCodes[dailyData.weather_code[i]];
+                const rainStr =
+                    weatherCode +
+                    " " +
+                    `(${dailyData.precipitation_probability_max[i]}% prob.)`;
+                const tempStr =
+                    ` ${dailyData.temperature_2m_max[i]}°C`.padEnd(10) +
+                    ` ${dailyData.temperature_2m_min[i]}°C`;
+
+                const line = new FastfetchLine(
+                    {
+                        keyConfig: {
+                            ...this.data.keyConfig,
+                            textContent: date.toLocaleString(
+                                ...this.data.keyConfig.dateFormat,
+                            ),
+                        },
+                        valueConfig: {
+                            textContent: rainStr.padEnd(35) + tempStr,
+                        },
+                    },
+                    context.keyManager,
+                );
+                this.el.append(line.wrapper);
+                this._cachedWeatherWrappers.push(line.wrapper);
+            });
+            this.progressLine.remove();
+        }
+
         const locationData = await getLocation(context);
         header.textContent = `Weather for ${this.data.label ?? locationData.city}`;
 
@@ -323,7 +374,13 @@ export const renderFunctionRegistry = {
             weatherCodesPromise,
             loadJson(constructedURL),
         ]);
+
         const dailyData = weatherData.daily;
+
+        writeWeatherCache(this.data.label ?? locationData.city, dailyData);
+
+        this._cachedWeatherWrappers.forEach((el) => el.remove());
+
         dailyData.time.forEach((day, i) => {
             const date = new Date(day);
             const weatherCode = weatherCodes[dailyData.weather_code[i]];
