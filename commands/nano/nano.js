@@ -9,7 +9,7 @@ export function nano({ input } = {}) {
         value: exportJSON(),
     });
     const btnSave = make("button", { textContent: "(ctrl + s) Save" });
-    const btnCancel = make("button", { textContent: "(ctrl + c) Cancel" });
+    const btnCancel = make("button", { textContent: "(esc) Cancel" });
     const btnExport = make("button", { textContent: "(ctrl + e) Export" });
 
     modal.append(textarea, btnSave, btnCancel, btnExport);
@@ -38,15 +38,14 @@ export function nano({ input } = {}) {
     });
 
     const shortcutListener = (e) => {
-        if (!e.ctrlKey) return;
         const k = (e.key || "").toLowerCase();
-        if (k === "s") {
+        if (k === "s" && e.ctrlKey) {
             e.preventDefault();
             btnSave.click();
-        } else if (k === "e") {
+        } else if (k === "e" && e.ctrlKey) {
             e.preventDefault();
             btnExport.click();
-        } else if (k === "c") {
+        } else if (k === "Escape") {
             e.preventDefault();
             btnCancel.click();
         }
