@@ -108,3 +108,26 @@ await initStatePromise;
 const state = getState();
 state.autorun.forEach(runCommand);
 input.focus();
+
+document.addEventListener("keydown", (e) => {
+    if (!e.ctrlKey) return;
+    const anchors = window.latestCatAnchors;
+    if (!anchors || !anchors.length) return;
+    if (!e.key === "ArrowDown" && !e.key === "ArrowUp") return;
+    e.preventDefault();
+
+    let idx = window.latestCatIndex ?? -1;
+    if (e.key === "ArrowDown") {
+        idx = idx + 1;
+    } else if (e.key === "ArrowUp") {
+        idx = idx - 1;
+    }
+    idx = Math.max(0, Math.min(idx, anchors.length - 1));
+
+    window.latestCatIndex = idx;
+    const el = anchors[idx];
+    if (el) {
+        el.focus();
+        el.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+});

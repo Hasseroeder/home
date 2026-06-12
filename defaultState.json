@@ -43,7 +43,96 @@
                         }
                     ]
                 },
-                { "text": "Reddit", "href": "https://www.reddit.com" }
+                {
+                    "text": "transaero.space",
+                    "href": "https://transaero.space",
+                    "entries": [
+                        {
+                            "text": "home",
+                            "href": "https://home.transaero.space"
+                        },
+                        {
+                            "text": "freya",
+                            "href": "https://transaero.space/freya"
+                        },
+                        {
+                            "text": "Agapanthus",
+                            "href": "https://agapanthus.transaero.space"
+                        }
+                    ]
+                },
+                {
+                    "text": "OwO resources",
+                    "entries": [
+                        { "text": "Basement", "href": "https://owo.bwep.net" },
+                        { "text": "NeonUtil", "href": "https://neonutil.com" },
+                        { "text": "OwO Bot", "href": "https://owobot.com/" },
+                        {
+                            "text": "OwO Bot Wiki",
+                            "href": "https://owobot.fandom.com/wiki/OwO_Bot_Wiki"
+                        }
+                    ]
+                },
+                {
+                    "text": "UNIX resources",
+                    "entries": [
+                        {
+                            "text": "Arch Linux Wiki",
+                            "href": "https://wiki.archlinux.org/"
+                        },
+                        {
+                            "text": "Awesome List",
+                            "href": "https://github.com/sindresorhus/awesome#readme"
+                        },
+                        {
+                            "text": "r/unixporn",
+                            "href": "https://www.reddit.com/r/unixporn/"
+                        }
+                    ]
+                },
+                {
+                    "text": "HRT",
+                    "entries": [
+                        {
+                            "text": "resources",
+                            "entries": [
+                                {
+                                    "text": "Transfem Science",
+                                    "href": "https://transfemscience.org/"
+                                },
+                                {
+                                    "text": "hrt.mom",
+                                    "href": "https://hrt.mom/how_to"
+                                },
+                                {
+                                    "text": "estrannai.se",
+                                    "href": "https://estrannai.se/"
+                                },
+                                {
+                                    "text": "papers.trans.diy",
+                                    "href": "https://papers.trans.diy/"
+                                }
+                            ]
+                        },
+                        {
+                            "text": "source",
+                            "entries": [
+                                {
+                                    "text": "estrogen.help",
+                                    "href": "https://estrogen.help/"
+                                },
+                                {
+                                    "text": "trans.diy",
+                                    "href": "https://trans.diy/"
+                                },
+                                {
+                                    "text": "hrt.coffee",
+                                    "href": "https://hrt.coffee/"
+                                }
+                            ]
+                        }
+                    ]
+                }
             ]
         }
     ],
