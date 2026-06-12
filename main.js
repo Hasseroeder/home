@@ -7,10 +7,6 @@ const initStatePromise = initState();
 
 const bodyWrapper = document.querySelector(".body-wrapper");
 const history = document.querySelector(".command-history");
-const input = make("input", { type: "text" });
-bodyWrapper.append(
-    new Prompt({ className: "command-line command-input", child: input }).el,
-);
 
 function handleDocumentClick(e) {
     const selection = window.getSelection();
@@ -49,7 +45,6 @@ function handleInputKeyDown(event) {
         return;
     }
 }
-input.addEventListener("keydown", handleInputKeyDown);
 
 function navigateHistory(isUp) {
     const cmdHistory = state?.commandHistory || [];
@@ -106,5 +101,16 @@ function runCommand(cmd) {
 
 await initStatePromise;
 const state = getState();
+
+const input = make("input", { type: "text" });
+bodyWrapper.append(
+    new Prompt({
+        className: "command-line command-input",
+        hostName: state.hostName,
+        child: input,
+    }).el,
+);
+input.addEventListener("keydown", handleInputKeyDown);
+
 state.autorun.forEach(runCommand);
 input.focus();
