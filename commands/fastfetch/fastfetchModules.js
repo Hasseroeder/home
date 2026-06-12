@@ -134,9 +134,6 @@ export const renderFunctionRegistry = {
             const imageBlob = await antix1ImageFetch.blob();
             this.fetchImage.src = URL.createObjectURL(imageBlob);
         } catch {
-            console.error(
-                "Failed to fetch image from Antix1, using backup image.",
-            );
             this.fetchImage.src = imageData.src;
         }
 
