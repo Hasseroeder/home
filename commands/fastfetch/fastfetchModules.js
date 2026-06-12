@@ -4,10 +4,55 @@ import { FastfetchLine } from "/commands/fastfetch/fastfetch.js";
 
 const weatherCodesPromise = loadJson("/media/weather_codes.json");
 
+// Simple localStorage caching helpers for fastfetch
+const CACHE_PREFIX = "fastfetch_cache_v1";
+const LOCATION_CACHE_KEY = `${CACHE_PREFIX}.location`;
+const WEATHER_CACHE_PREFIX = `${CACHE_PREFIX}.weather:`; // suffix with constructed URL
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+function readCache(key) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return null;
+        if (!parsed.ts || !("data" in parsed)) return null;
+        if (Date.now() - parsed.ts > CACHE_TTL_MS) {
+            localStorage.removeItem(key);
+            return null;
+        }
+        return parsed.data;
+    } catch (err) {
+        console.error("fastfetch cache read error:", err);
+        return null;
+    }
+}
+
+function writeCache(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
+    } catch (err) {
+        console.error("fastfetch cache write error:", err);
+    }
+}
+
+function getCachedLocation() {
+    return readCache(LOCATION_CACHE_KEY);
+}
+
 function getLocation(context) {
-    context.locationPromise ??= fetch("https://ipinfo.io/json").then(
-        (response) => response.json(),
-    );
+    if (!context.locationPromise) {
+        context.locationPromise = fetch("https://ipinfo.io/json")
+            .then((response) => response.json())
+            .then((data) => {
+                try {
+                    writeCache(LOCATION_CACHE_KEY, data);
+                } catch (e) {
+                    /* ignore cache write errors */
+                }
+                return data;
+            });
+    }
     return context.locationPromise;
 }
 
@@ -182,30 +227,68 @@ export const renderFunctionRegistry = {
         });
     },
     ip: async function (context) {
-        this.el.append(this.progressLine.wrapper);
+        const cached = getCachedLocation();
+        let line;
+        if (cached) {
+            line = new FastfetchLine(
+                {
+                    keyConfig: this.data.keyConfig,
+                    valueConfig: { textContent: `${cached.ip} (cached)` },
+                },
+                context.keyManager,
+            );
+            this.el.append(line.wrapper);
+        } else {
+            this.el.append(this.progressLine.wrapper);
+        }
+
         const locationData = await getLocation(context);
-        const line = new FastfetchLine(
-            {
-                keyConfig: this.data.keyConfig,
-                valueConfig: { textContent: locationData.ip },
-            },
-            context.keyManager,
-        );
-        this.el.append(line.wrapper);
+        if (line) {
+            line.value.el.textContent = locationData.ip;
+        } else {
+            const freshLine = new FastfetchLine(
+                {
+                    keyConfig: this.data.keyConfig,
+                    valueConfig: { textContent: locationData.ip },
+                },
+                context.keyManager,
+            );
+            this.el.append(freshLine.wrapper);
+        }
     },
     location: async function (context) {
-        this.el.append(this.progressLine.wrapper);
-        const locationData = await getLocation(context);
-        const line = new FastfetchLine(
-            {
-                keyConfig: this.data.keyConfig,
-                valueConfig: {
-                    textContent: `${locationData.city} ${locationData.region} ${locationData.country}`,
+        const cached = getCachedLocation();
+        let line;
+        if (cached) {
+            line = new FastfetchLine(
+                {
+                    keyConfig: this.data.keyConfig,
+                    valueConfig: {
+                        textContent: `${cached.city} ${cached.region} ${cached.country} (cached)`,
+                    },
                 },
-            },
-            context.keyManager,
-        );
-        this.el.append(line.wrapper);
+                context.keyManager,
+            );
+            this.el.append(line.wrapper);
+        } else {
+            this.el.append(this.progressLine.wrapper);
+        }
+
+        const locationData = await getLocation(context);
+        if (line) {
+            line.value.el.textContent = `${locationData.city} ${locationData.region} ${locationData.country}`;
+        } else {
+            const freshLine = new FastfetchLine(
+                {
+                    keyConfig: this.data.keyConfig,
+                    valueConfig: {
+                        textContent: `${locationData.city} ${locationData.region} ${locationData.country}`,
+                    },
+                },
+                context.keyManager,
+            );
+            this.el.append(freshLine.wrapper);
+        }
     },
     weather: async function (context) {
         const header = make("span", {

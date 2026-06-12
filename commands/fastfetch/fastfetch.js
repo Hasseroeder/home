@@ -94,7 +94,6 @@ class FastfetchModule {
             },
             context.keyManager,
         );
-        this.el.append(this.progressLine.wrapper);
         context.textWrapper.append(this.el);
     }
 
