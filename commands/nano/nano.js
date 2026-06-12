@@ -45,7 +45,7 @@ export function nano({ input } = {}) {
         } else if (k === "e" && e.ctrlKey) {
             e.preventDefault();
             btnExport.click();
-        } else if (k === "Escape") {
+        } else if (k === "escape") {
             e.preventDefault();
             btnCancel.click();
         }
