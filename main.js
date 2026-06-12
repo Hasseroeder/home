@@ -54,7 +54,7 @@ function runCommand(cmd) {
 
 state.autorun.forEach(runCommand);
 input.focus();
-fetch("https://antix1.transaero.space/images/", {
+fetch("https://antix1.transaero.space/images/369848", {
     method: "GET",
     headers: {
         "x-api-key": "my_super_duper_mega_ultra_secure_API_key",
