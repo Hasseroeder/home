@@ -1,28 +1,49 @@
 import { Line, Prompt } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
+import { SearchEngine } from "/commands/search/searchEngine.js";
 
-export const SEARCH_ENGINES = {
-    youtube: (q) =>
-        q
-            ? `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
-            : "https://www.youtube.com",
-    duckduckgo: (q) =>
-        q
-            ? `https://duckduckgo.com/?q=${encodeURIComponent(q)}`
-            : "https://duckduckgo.com",
-    google: (q) =>
-        q
-            ? `https://www.google.com/search?q=${encodeURIComponent(q)}`
-            : "https://www.google.com",
-    wikipedia: (q) =>
-        q
-            ? `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(q)}`
-            : "https://en.wikipedia.org",
-    arch_linux_wiki: (q) =>
-        q
-            ? `https://wiki.archlinux.org/index.php?search=${encodeURIComponent(q)}`
-            : "https://wiki.archlinux.org",
-};
+export const engines = [
+    new SearchEngine({
+        prettyName: "YouTube",
+        prefix: "y",
+        slug: "youtube",
+        emoji: "󰗃",
+        baseUrl: "https://www.youtube.com",
+        searchPartUrl: "/results?search_query=",
+    }),
+    new SearchEngine({
+        prettyName: "DuckDuckGo",
+        prefix: "d",
+        slug: "duckduckgo",
+        emoji: "󰇥",
+        baseUrl: "https://duckduckgo.com",
+        searchPartUrl: "/?q=",
+    }),
+    new SearchEngine({
+        prettyName: "Google",
+        prefix: "g",
+        slug: "google",
+        emoji: "",
+        baseUrl: "https://www.google.com",
+        searchPartUrl: "/search?q=",
+    }),
+    new SearchEngine({
+        prettyName: "Wikipedia",
+        prefix: "w",
+        slug: "wikipedia",
+        emoji: "󰖬",
+        baseUrl: "https://en.wikipedia.org",
+        searchPartUrl: "/wiki/Special:Search?search=",
+    }),
+    new SearchEngine({
+        prettyName: "Arch Linux Wiki",
+        prefix: "a",
+        slug: "arch_linux_wiki",
+        emoji: "󰣇",
+        baseUrl: "https://wiki.archlinux.org",
+        searchPartUrl: "/index.php?search=",
+    }),
+];
 
 export function search({ wrapper, input } = {}) {
     if (!wrapper) return;
@@ -35,7 +56,6 @@ export function search({ wrapper, input } = {}) {
         return;
     }
 
-    const engines = Object.keys(SEARCH_ENGINES);
     let idx = 0;
 
     // Header
@@ -43,36 +63,48 @@ export function search({ wrapper, input } = {}) {
     title.classList.add("search-section");
     const controls = [
         new Line({
-            textContent:
-                "      cycle engines:  [ shift + tab, tab ], [ up, down ]",
+            textContent: "   ## swap engine ",
         }),
         new Line({
             textContent:
-                "      first/last:     [ page up, page down ]         ",
+                "        back / forth    [ shift + tab / tab ], [ up / down ]",
         }),
         new Line({
             textContent:
-                "      exit:           [ ctrl + c ], [ esc ]          ",
+                "        first / last    [ page up / page down ]         ",
         }),
         new Line({
             textContent:
-                "      search:         [ enter ]                      ",
+                "   ## search          [ enter ]                      ",
+        }),
+        new Line({
+            textContent: "        newtab          [ + ctrl ]               ",
+        }),
+        new Line({
+            textContent: "        newtab(focus)   [ + ctrl + shift ]       ",
+        }),
+        new Line({
+            textContent: "        newwindow       [ + shift ]               ",
         }),
         new Line({
             textContent:
-                "      _blank search:  [ ctrl + enter ], [ shift + enter ]",
+                "   ## exit            [ ctrl + c ], [ esc ]          ",
         }),
     ];
 
     // Engines list
     const enginesTitle = new Line({ textContent: "  # Engines" });
     enginesTitle.classList.add("search-section");
-    const engineLines = engines.map((name, i) => {
-        const prefix = i === idx ? "   -> " : "      ";
-        const ln = new Line({ textContent: `${prefix}${name}` });
-        ln.classList.add("search-engine-line");
-        if (i === idx) ln.classList.add("search-selected");
-        return ln;
+    engines.forEach((engine, i) => {
+        engine.ln = new Line({
+            className: "command-line search-engine-line",
+        });
+        engine.ln.update = function () {
+            const prefix = i === idx ? "   -> " : "      ";
+            this.textContent = prefix + engine.emoji + " " + engine.slug;
+            this.classList.toggle("search-selected", i === idx);
+        };
+        engine.ln.update();
     });
 
     // Query prompt
@@ -96,23 +128,20 @@ export function search({ wrapper, input } = {}) {
         title,
         ...controls,
         enginesTitle,
-        ...engineLines,
+        ...engines.map((engine) => engine.ln),
         queryTitle,
         promptWrapper,
     );
 
     function updateEngineLines() {
-        engineLines.forEach((ln, i) => {
-            ln.textContent = (i === idx ? "   -> " : "      ") + engines[i];
-            ln.classList.toggle("search-selected", i === idx);
-        });
+        engines.forEach((engine) => engine.ln.update());
     }
 
     function close() {
         title.remove();
         controls.forEach((control) => control.remove());
         enginesTitle.remove();
-        engineLines.forEach((l) => l.remove());
+        engines.forEach((engine) => engine.ln.remove());
         queryTitle.remove();
         promptWrapper.remove();
         document.removeEventListener("keydown", docHandler);
@@ -123,7 +152,6 @@ export function search({ wrapper, input } = {}) {
     }
 
     function inputHandler(e) {
-        // cycle engines: Tab (forward) and Shift+Tab (back)
         if (e.key === "Tab") {
             e.preventDefault();
             idx = e.shiftKey
@@ -133,7 +161,6 @@ export function search({ wrapper, input } = {}) {
             return;
         }
 
-        // Arrow keys: Up (back) and Down (forward)
         if (e.key === "ArrowUp" || e.key === "ArrowDown") {
             e.preventDefault();
             idx =
@@ -144,7 +171,6 @@ export function search({ wrapper, input } = {}) {
             return;
         }
 
-        // Page keys: PageUp (start) and PageDown (end)
         if (e.key === "PageUp" || e.key === "PageDown") {
             e.preventDefault();
             idx = e.key === "PageUp" ? 0 : engines.length - 1;
@@ -152,18 +178,15 @@ export function search({ wrapper, input } = {}) {
             return;
         }
 
-        // Enter: open search
         if (e.key === "Enter") {
-            const q = inputEl.value.trim();
-            const url = SEARCH_ENGINES[engines[idx]](q);
-            const target = e.ctrlKey || e.shiftKey ? "_blank" : "_self";
-            wrapper.append(new Line({ textContent: `Opening "${url}"` }));
-            const newTab = window.open(url, target);
+            engines[idx].search({
+                wrapper,
+                argumentTokens: [inputEl.value],
+            });
             close();
             return;
         }
 
-        // Escape or Ctrl+C: close
         if (
             e.key === "Escape" ||
             (e.key.toLowerCase && e.key.toLowerCase() === "c" && e.ctrlKey)
