@@ -1,6 +1,6 @@
 import { make } from "/jsUtils/injectionUtil.js";
 import { Prompt } from "/lineUtil.js";
-import { commandRegistry } from "/commands/commands.js";
+import { commandRegistry, initiateEngines } from "/commands/commands.js";
 import { initState, getState, setRuntime } from "/jsUtils/stateManager.js";
 
 const initStatePromise = initState();
@@ -111,6 +111,6 @@ bodyWrapper.append(
     }).el,
 );
 input.addEventListener("keydown", handleInputKeyDown);
-
+initiateEngines(state.searchEngines ?? []);
 state.autorun.forEach(runCommand);
 input.focus();

@@ -2,50 +2,7 @@ import { Line, Prompt } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
 import { SearchEngine } from "/commands/search/searchEngine.js";
 
-export const engines = [
-    new SearchEngine({
-        prettyName: "YouTube",
-        prefix: "y",
-        slug: "youtube",
-        emoji: "󰗃",
-        baseUrl: "https://www.youtube.com",
-        searchPartUrl: "/results?search_query=",
-    }),
-    new SearchEngine({
-        prettyName: "DuckDuckGo",
-        prefix: "d",
-        slug: "duckduckgo",
-        emoji: "󰇥",
-        baseUrl: "https://duckduckgo.com",
-        searchPartUrl: "/?q=",
-    }),
-    new SearchEngine({
-        prettyName: "Google",
-        prefix: "g",
-        slug: "google",
-        emoji: "",
-        baseUrl: "https://www.google.com",
-        searchPartUrl: "/search?q=",
-    }),
-    new SearchEngine({
-        prettyName: "Wikipedia",
-        prefix: "w",
-        slug: "wikipedia",
-        emoji: "󰖬",
-        baseUrl: "https://en.wikipedia.org",
-        searchPartUrl: "/wiki/Special:Search?search=",
-    }),
-    new SearchEngine({
-        prettyName: "Arch Linux Wiki",
-        prefix: "a",
-        slug: "arch_linux_wiki",
-        emoji: "󰣇",
-        baseUrl: "https://wiki.archlinux.org",
-        searchPartUrl: "/index.php?search=",
-    }),
-];
-
-export function search({ wrapper, input } = {}) {
+export function search({ wrapper, input, state } = {}) {
     if (!wrapper) return;
 
     // don't open a second search UI
@@ -56,6 +13,9 @@ export function search({ wrapper, input } = {}) {
         return;
     }
 
+    const engines = state.searchEngines.map(
+        (config) => new SearchEngine(config),
+    );
     let idx = 0;
 
     // Header

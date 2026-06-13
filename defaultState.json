@@ -2,6 +2,48 @@
     "autorun": ["updateFingerprinting", "fastfetch", "cat links.txt | column"],
     "userName": "user",
     "hostName": "user@browser",
+    "searchEngines": [
+        {
+            "prettyName": "YouTube",
+            "prefix": "y",
+            "slug": "youtube",
+            "emoji": "󰗃",
+            "baseUrl": "https://www.youtube.com",
+            "searchPartUrl": "/results?search_query="
+        },
+        {
+            "prettyName": "DuckDuckGo",
+            "prefix": "d",
+            "slug": "duckduckgo",
+            "emoji": "󰇥",
+            "baseUrl": "https://duckduckgo.com",
+            "searchPartUrl": "/?q="
+        },
+        {
+            "prettyName": "Google",
+            "prefix": "g",
+            "slug": "google",
+            "emoji": "",
+            "baseUrl": "https://www.google.com",
+            "searchPartUrl": "/search?q="
+        },
+        {
+            "prettyName": "Wikipedia",
+            "prefix": "w",
+            "slug": "wikipedia",
+            "emoji": "󰖬",
+            "baseUrl": "https://en.wikipedia.org",
+            "searchPartUrl": "/wiki/Special:Search?search="
+        },
+        {
+            "prettyName": "Arch Linux Wiki",
+            "prefix": "a",
+            "slug": "arch_linux_wiki",
+            "emoji": "󰣇",
+            "baseUrl": "https://wiki.archlinux.org",
+            "searchPartUrl": "/index.php?search="
+        }
+    ],
     "cattableFiles": [
         {
             "name": "links.txt",

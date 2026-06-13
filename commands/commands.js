@@ -6,7 +6,8 @@ import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
 import { cat } from "/commands/cat/cat.js";
-import { search, engines } from "/commands/search/search.js";
+import { search } from "/commands/search/search.js";
+import { SearchEngine } from "/commands/search/searchEngine.js";
 
 const clearCommand = ({ wrapper } = {}) => wrapper && (wrapper.innerHTML = "");
 
@@ -91,17 +92,20 @@ export const commandRegistry = [
     },
 ];
 
-engines.forEach((engine) => {
-    commandRegistry.push({
-        name: engine.slug,
-        aliases: [engine.slug, engine.prefix, "!" + engine.prefix],
-        description: engine.description,
-        command: (args) => engine.search_blank(args),
+export function initiateEngines(searchEngines) {
+    const engines = searchEngines.map((config) => new SearchEngine(config));
+    engines.forEach((engine) => {
+        commandRegistry.push({
+            name: engine.slug,
+            aliases: [engine.slug, engine.prefix, "!" + engine.prefix],
+            description: engine.description,
+            command: (args) => engine.search_blank(args),
+        });
+        commandRegistry.push({
+            name: engine.slug + "_self",
+            aliases: [engine.prefix.repeat(2)],
+            description: engine.description,
+            command: (args) => engine.search_self(args),
+        });
     });
-    commandRegistry.push({
-        name: engine.slug + "_self",
-        aliases: [engine.prefix.repeat(2)],
-        description: engine.description,
-        command: (args) => engine.search_self(args),
-    });
-});
+}
