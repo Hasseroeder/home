@@ -1,4 +1,4 @@
-import { printHelp } from "/commands/help/help.js";
+import { help } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
 import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
@@ -51,7 +51,7 @@ export const commandRegistry = [
         name: "help",
         aliases: ["h", "help"],
         description: "shows a list of commands, descriptions and aliases",
-        command: printHelp,
+        command: help,
     },
     {
         name: "updateFingerprinting",
@@ -97,13 +97,13 @@ export function initiateEngines(searchEngines) {
     engines.forEach((engine) => {
         commandRegistry.push({
             name: engine.slug,
-            aliases: [engine.slug, engine.prefix, "!" + engine.prefix],
+            aliases: engine.aliases,
             description: engine.description,
             command: (args) => engine.search_blank(args),
         });
         commandRegistry.push({
             name: engine.slug + "_self",
-            aliases: [engine.prefix.repeat(2)],
+            aliases: engine.aliases_self,
             description: engine.description,
             command: (args) => engine.search_self(args),
         });

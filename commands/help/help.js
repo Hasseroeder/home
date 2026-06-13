@@ -1,6 +1,6 @@
 import { Line } from "/lineUtil.js";
 
-export function printHelp({ wrapper, commandRegistry } = {}) {
+export function help({ wrapper, commandRegistry } = {}) {
     const helpLines = commandRegistry.flatMap((command) => [
         new Line({
             textContent: command.name,

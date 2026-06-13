@@ -2,10 +2,17 @@
     "autorun": ["updateFingerprinting", "fastfetch", "cat links.txt | column"],
     "userName": "user",
     "hostName": "user@browser",
+    "commandLinks": [
+        {
+            "aliases": ["bing"],
+            "url": "https://www.bing.com/"
+        }
+    ],
     "searchEngines": [
         {
             "prettyName": "YouTube",
-            "prefix": "y",
+            "aliases": ["youtube", "y"],
+            "aliases_self": ["yy"],
             "slug": "youtube",
             "emoji": "󰗃",
             "baseUrl": "https://www.youtube.com",
@@ -13,7 +20,8 @@
         },
         {
             "prettyName": "DuckDuckGo",
-            "prefix": "d",
+            "aliases": ["duckduckgo", "d"],
+            "aliases_self": ["dd"],
             "slug": "duckduckgo",
             "emoji": "󰇥",
             "baseUrl": "https://duckduckgo.com",
@@ -21,7 +29,8 @@
         },
         {
             "prettyName": "Google",
-            "prefix": "g",
+            "aliases": ["google", "g"],
+            "aliases_self": ["gg"],
             "slug": "google",
             "emoji": "",
             "baseUrl": "https://www.google.com",
@@ -29,7 +38,8 @@
         },
         {
             "prettyName": "Wikipedia",
-            "prefix": "w",
+            "aliases": ["wikipedia", "w"],
+            "aliases_self": ["ww"],
             "slug": "wikipedia",
             "emoji": "󰖬",
             "baseUrl": "https://en.wikipedia.org",
@@ -37,7 +47,8 @@
         },
         {
             "prettyName": "Arch Linux Wiki",
-            "prefix": "a",
+            "aliases": ["archlinux", "a"],
+            "aliases_self": ["aa"],
             "slug": "arch_linux_wiki",
             "emoji": "󰣇",
             "baseUrl": "https://wiki.archlinux.org",

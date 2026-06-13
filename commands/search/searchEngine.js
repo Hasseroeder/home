@@ -1,8 +1,17 @@
 import { Line, Prompt } from "/lineUtil.js";
 
 export class SearchEngine {
-    constructor({ slug, emoji, baseUrl, searchPartUrl, prefix, prettyName }) {
-        this.prefix = prefix;
+    constructor({
+        slug,
+        emoji,
+        baseUrl,
+        searchPartUrl,
+        prettyName,
+        aliases,
+        aliases_self,
+    }) {
+        this.aliases_self = aliases_self;
+        this.aliases = aliases;
         this.slug = slug;
         this.emoji = emoji;
         this.baseUrl = baseUrl;
