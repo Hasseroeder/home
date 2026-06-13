@@ -41,15 +41,28 @@ export function search({ wrapper, input } = {}) {
     // Header
     const title = new Line({ textContent: "  # Search" });
     title.classList.add("search-section");
-    const controls1 = new Line({
-        textContent: "      cycle engines:  [ shift + tab, tab ], [ up, down ]",
-    });
-    const controls2 = new Line({
-        textContent: "      first/last:     [ page up, page down ]",
-    });
-    const controls3 = new Line({
-        textContent: "      exit:           [ ctrl + c ], [ esc ]",
-    });
+    const controls = [
+        new Line({
+            textContent:
+                "      cycle engines:  [ shift + tab, tab ], [ up, down ]",
+        }),
+        new Line({
+            textContent:
+                "      first/last:     [ page up, page down ]         ",
+        }),
+        new Line({
+            textContent:
+                "      exit:           [ ctrl + c ], [ esc ]          ",
+        }),
+        new Line({
+            textContent:
+                "      search:         [ enter ]                      ",
+        }),
+        new Line({
+            textContent:
+                "      _blank search:  [ ctrl + enter ], [ shift + enter ]",
+        }),
+    ];
 
     // Engines list
     const enginesTitle = new Line({ textContent: "  # Engines" });
@@ -81,9 +94,7 @@ export function search({ wrapper, input } = {}) {
     // append all parts into history
     wrapper.append(
         title,
-        controls1,
-        controls2,
-        controls3,
+        ...controls,
         enginesTitle,
         ...engineLines,
         queryTitle,
@@ -99,9 +110,7 @@ export function search({ wrapper, input } = {}) {
 
     function close() {
         title.remove();
-        controls1.remove();
-        controls2.remove();
-        controls3.remove();
+        controls.forEach((control) => control.remove());
         enginesTitle.remove();
         engineLines.forEach((l) => l.remove());
         queryTitle.remove();
@@ -147,8 +156,9 @@ export function search({ wrapper, input } = {}) {
         if (e.key === "Enter") {
             const q = inputEl.value.trim();
             const url = SEARCH_ENGINES[engines[idx]](q);
+            const target = e.ctrlKey || e.shiftKey ? "_blank" : "_self";
             wrapper.append(new Line({ textContent: `Opening "${url}"` }));
-            window.open(url, "_self");
+            window.open(url, target);
             close();
             return;
         }
