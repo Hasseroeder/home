@@ -35,6 +35,11 @@ export async function initState() {
     }
     _runtime = {};
     _stateFacade = null;
+
+    // prefetching
+    _runtime.IANApromise = fetch(
+        "https://data.iana.org/TLD/tlds-alpha-by-domain.txt",
+    );
 }
 function ensureFacadeProp(prop) {
     if (!_stateFacade) _stateFacade = {};

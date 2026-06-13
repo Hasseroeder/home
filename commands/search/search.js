@@ -68,11 +68,12 @@ export function search({ wrapper, input, state } = {}) {
     });
 
     // Query prompt
+    console.log(state);
     const queryTitle = new Line({ textContent: "  # Query" });
     queryTitle.classList.add("search-section");
     const inputEl = make("input", { type: "text" });
     const promptWrapper = new Prompt({
-        hostName: "      user@search",
+        hostName: `      ${state.userName ?? "user"}@search`,
         directory: "~",
         prompt: ">",
         command: "",
