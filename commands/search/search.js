@@ -158,7 +158,8 @@ export function search({ wrapper, input } = {}) {
             const url = SEARCH_ENGINES[engines[idx]](q);
             const target = e.ctrlKey || e.shiftKey ? "_blank" : "_self";
             wrapper.append(new Line({ textContent: `Opening "${url}"` }));
-            window.open(url, target);
+            const newTab = window.open(url, target);
+            newTab.focus();
             close();
             return;
         }
