@@ -159,7 +159,6 @@ export function search({ wrapper, input } = {}) {
             const target = e.ctrlKey || e.shiftKey ? "_blank" : "_self";
             wrapper.append(new Line({ textContent: `Opening "${url}"` }));
             const newTab = window.open(url, target);
-            newTab.focus();
             close();
             return;
         }
