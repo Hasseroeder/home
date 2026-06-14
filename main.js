@@ -75,27 +75,41 @@ function navigateHistory(isUp) {
     input.value = temp;
 }
 
-function runCommand(cmd) {
+async function runCommand(CMD) {
     try {
         const prev = state?.commandHistory || [];
-        const deduped = prev.filter((c) => c !== cmd);
-        setRuntime("commandHistory", [...deduped, cmd]);
+        const deduped = prev.filter((c) => c !== CMD);
+        setRuntime("commandHistory", [...deduped, CMD]);
         setRuntime("commandHistoryIndex", -1);
     } catch {}
 
-    history.append(new Prompt({ hostName: state?.hostName, command: cmd }).el);
+    history.append(new Prompt({ hostName: state?.hostName, command: CMD }).el);
 
-    const [name, ...args] = cmd.split(/\s+/);
+    const [name, ...args] = CMD.split(/\s+/);
 
     const commandObj = commandRegistry.find((c) => c.aliases.includes(name));
-    if (!commandObj) return;
-    commandObj.command({
+    commandObj?.command({
         wrapper: history,
         input,
         state,
         argumentTokens: args,
         commandRegistry,
     });
+    if (!commandObj) {
+        if (!state.TLDs)
+            await state.IANApromise.then((r) => r.text())
+                .then((txt) => txt.split(/\r?\n/).slice(1, -1))
+                .then((lines) => setRuntime("TLDs", lines));
+
+        const cmd = CMD.toLowerCase();
+        const tlds = state.TLDs.map((TLD) => TLD.toLowerCase());
+        const tld = tlds.find((tld) => cmd.includes(`.${tld}`));
+        if (!tld) return;
+
+        if (CMD.includes("://")) window.open(CMD);
+        else window.open("http://" + CMD);
+    }
+
     input.scrollIntoView();
 }
 
@@ -112,5 +126,5 @@ bodyWrapper.append(
 );
 input.addEventListener("keydown", handleInputKeyDown);
 initiateEngines(state.searchEngines ?? []);
-state.autorun.forEach(runCommand);
+state.autorun.forEach(await runCommand);
 input.focus();
