@@ -29,7 +29,7 @@ export function cat({ wrapper, argumentTokens, state, input } = {}) {
 
     function onKey(e) {
         if (!anchors.length) return;
-        if (!e.ctrlKey && !e.key === "Enter") return input?.focus();
+        if (!e.ctrlKey || !e.key === "Enter") return input?.focus();
         if (
             !["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(e.key)
         )
