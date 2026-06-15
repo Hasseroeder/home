@@ -12,7 +12,7 @@ export function cat({ wrapper, argumentTokens, state, input } = {}) {
     const columnsMode =
         argumentTokens[1]?.trim() === "|" &&
         argumentTokens[2]?.trim() === "column";
-    const columnsCount = columnsMode ? 6 : 1;
+    const columnsCount = columnsMode ? 7 : 1;
 
     const clamp = (v, a, b) => Math.max(a, Math.min(v, b));
 
@@ -29,7 +29,7 @@ export function cat({ wrapper, argumentTokens, state, input } = {}) {
 
     function onKey(e) {
         if (!anchors.length) return;
-        if (!e.ctrlKey || !e.key === "Enter") return input?.focus();
+        if (!e.ctrlKey && e.key !== "Enter") return input?.focus();
         if (
             !["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(e.key)
         )
