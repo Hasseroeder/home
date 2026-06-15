@@ -2,28 +2,6 @@
     "autorun": ["updateFingerprinting", "fastfetch", "cat links.txt | column"],
     "userName": "user",
     "hostName": "user@browser",
-    "commandLinks": [
-        {
-            "aliases": ["bing"],
-            "url": "https://www.bing.com/"
-        },
-        {
-            "aliases": ["reddit"],
-            "url": "https://www.reddit.com/"
-        },
-        {
-            "aliases": ["twitter"],
-            "url": "https://www.twitter.com/"
-        },
-        {
-            "aliases": ["bsky"],
-            "url": "https://bsky.app/"
-        },
-        {
-            "aliases": ["bsky"],
-            "url": "https://bsky.app/"
-        }
-    ],
     "searchEngines": [
         {
             "prettyName": "YouTube",
