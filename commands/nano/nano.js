@@ -1,12 +1,11 @@
 import { make } from "/jsUtils/injectionUtil.js";
-import { exportJSON, importJSON } from "/jsUtils/stateManager.js";
 
-export function nano({ input } = {}) {
+export function nano({ input, bigState } = {}) {
     const overlay = make("div", { className: "state-editor-overlay" });
     const modal = make("div", { className: "state-editor-modal" });
     const textarea = make("textarea", {
         className: "state-editor-textarea",
-        value: exportJSON(),
+        value: bigState.exportJSON(),
     });
     const btnSave = make("button", { textContent: "(ctrl + s) Save" });
     const btnCancel = make("button", { textContent: "(esc) Cancel" });
@@ -20,7 +19,7 @@ export function nano({ input } = {}) {
     btnCancel.addEventListener("click", close);
 
     btnSave.addEventListener("click", () => {
-        const ok = importJSON(textarea.value);
+        const ok = bigState.importJSON(textarea.value);
         if (!ok) {
             alert("Invalid JSON — not saved.");
             return;
@@ -30,7 +29,9 @@ export function nano({ input } = {}) {
     });
 
     btnExport.addEventListener("click", () => {
-        const blob = new Blob([exportJSON()], { type: "application/json" });
+        const blob = new Blob([bigState.exportJSON()], {
+            type: "application/json",
+        });
         const url = URL.createObjectURL(blob);
         const a = make("a", { href: url, download: "state.json" });
         a.click();

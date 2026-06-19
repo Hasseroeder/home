@@ -1,7 +1,6 @@
 import { help } from "/commands/help/help.js";
 import { updateFingerprinting } from "/commands/updateFingerprinting/updateFingerprinting.js";
 import { fastfetch } from "/commands/fastfetch/fastfetch.js";
-import { set as setState, resetPersistent } from "/jsUtils/stateManager.js";
 import { nano } from "/commands/nano/nano.js";
 import { Line } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
@@ -10,29 +9,6 @@ import { search } from "/commands/search/search.js";
 import { SearchEngine } from "/commands/search/searchEngine.js";
 
 const clearCommand = ({ wrapper } = {}) => wrapper && (wrapper.innerHTML = "");
-
-function setCommand({ wrapper, argumentTokens } = {}) {
-    const raw = (argumentTokens || []).join(" ").trim();
-    const [leftPart, ...rest] = raw.split("=");
-    if (!rest.length) {
-        wrapper?.append(
-            new Line({ textContent: "usage: set path = jsonValue" }),
-        );
-        return;
-    }
-    const left = leftPart.trim();
-    const right = rest.join("=").trim();
-    let value;
-    try {
-        value = JSON.parse(right);
-    } catch (_) {
-        value = right;
-    }
-    setState(left, value);
-    wrapper?.append(
-        new Line({ textContent: `Set ${left} = ${JSON.stringify(value)}` }),
-    );
-}
 
 export const commandRegistry = [
     {
@@ -60,13 +36,6 @@ export const commandRegistry = [
         command: updateFingerprinting,
     },
     {
-        name: "set",
-        aliases: ["set"],
-        description:
-            'set state value by path (e.g. set config.autorun = ["fetch"])',
-        command: setCommand,
-    },
-    {
         name: "nano",
         aliases: ["nano", "vi", "vim", "config", "edit"],
         description: "open JSON state editor",
@@ -76,7 +45,7 @@ export const commandRegistry = [
         name: "reset",
         aliases: ["reset"],
         description: "restore persistent state to default and reload",
-        command: resetPersistent,
+        command: ({ bigState }) => bigState.reset(),
     },
     {
         name: "cat",

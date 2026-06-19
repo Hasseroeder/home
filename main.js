@@ -1,9 +1,12 @@
 import { make } from "/jsUtils/injectionUtil.js";
 import { Prompt } from "/lineUtil.js";
 import { commandRegistry, initiateEngines } from "/commands/commands.js";
-import { initState, getState, setRuntime } from "/jsUtils/stateManager.js";
+import { createStateManager } from "/jsUtils/stateManager.js";
 
-const initStatePromise = initState();
+const bigState = createStateManager("app_state", "/defaultState.json");
+await bigState.init();
+const state = bigState.getProxy();
+state.IANApromise = fetch("https://data.iana.org/TLD/tlds-alpha-by-domain.txt");
 
 const bodyWrapper = document.querySelector(".body-wrapper");
 const history = document.querySelector(".command-history");
@@ -55,7 +58,7 @@ function navigateHistory(isUp) {
     if (isUp) {
         if (idx === -1) idx = cmdHistory.length;
         if (idx > 0) idx--;
-        setRuntime("commandHistoryIndex", idx);
+        state.commandHistoryIndex = idx;
         input.value = cmdHistory[idx] || "";
         return;
     }
@@ -64,14 +67,14 @@ function navigateHistory(isUp) {
     if (idx === -1) return;
     if (idx < cmdHistory.length - 1) {
         idx++;
-        setRuntime("commandHistoryIndex", idx);
+        state.commandHistoryIndex = idx;
         input.value = cmdHistory[idx] || "";
         return;
     }
 
     // moved past the newest entry: restore temp and reset cursor
     const temp = state?.commandHistoryTemp || "";
-    setRuntime("commandHistoryIndex", -1);
+    state.commandHistoryIndex = -1;
     input.value = temp;
 }
 
@@ -79,8 +82,8 @@ async function runCommand(CMD) {
     try {
         const prev = state?.commandHistory || [];
         const deduped = prev.filter((c) => c !== CMD);
-        setRuntime("commandHistory", [...deduped, CMD]);
-        setRuntime("commandHistoryIndex", -1);
+        state.commandHistory = [...deduped, CMD];
+        state.commandHistoryIndex = -1;
     } catch {}
 
     history.append(new Prompt({ hostName: state?.hostName, command: CMD }).el);
@@ -91,7 +94,7 @@ async function runCommand(CMD) {
     commandObj?.command({
         wrapper: history,
         input,
-        state,
+        bigState,
         argumentTokens: args,
         commandRegistry,
     });
@@ -99,7 +102,7 @@ async function runCommand(CMD) {
         if (!state.TLDs)
             await state.IANApromise.then((r) => r.text())
                 .then((txt) => txt.split(/\r?\n/).slice(1, -1))
-                .then((lines) => setRuntime("TLDs", lines));
+                .then((lines) => (state.TLDs = lines));
 
         const cmd = CMD.toLowerCase();
         const tlds = state.TLDs.map((TLD) => TLD.toLowerCase());
@@ -112,9 +115,6 @@ async function runCommand(CMD) {
 
     input.scrollIntoView();
 }
-
-await initStatePromise;
-const state = getState();
 
 const input = make("input", { type: "text" });
 bodyWrapper.append(

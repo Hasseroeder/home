@@ -43,7 +43,8 @@ class FastfetchKeyManager {
     }
 }
 
-export function fastfetch({ wrapper, state, input } = {}) {
+export function fastfetch({ wrapper, bigState, input } = {}) {
+    const state = bigState.getProxy();
     const fetchModules = state.fetchModules.map(createFastfetchModule);
     const fetchWrapper = make("div", { className: "fetch-wrapper" });
     const textWrapper = make("div", { className: "fetch-text-wrapper" });

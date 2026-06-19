@@ -2,7 +2,8 @@ import { Line, Prompt } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
 import { SearchEngine } from "/commands/search/searchEngine.js";
 
-export function search({ wrapper, input, state } = {}) {
+export function search({ wrapper, input, bigState } = {}) {
+    const state = bigState.getProxy();
     if (!wrapper) return;
 
     // don't open a second search UI
@@ -68,7 +69,6 @@ export function search({ wrapper, input, state } = {}) {
     });
 
     // Query prompt
-    console.log(state);
     const queryTitle = new Line({ textContent: "  # Query" });
     queryTitle.classList.add("search-section");
     const inputEl = make("input", { type: "text" });
