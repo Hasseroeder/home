@@ -1,28 +1,9 @@
 {
     "searchEngines": [
         {
-            "prettyName": "YouTube",
-            "aliases": [
-                "youtube",
-                "y"
-            ],
-            "aliases_self": [
-                "yy"
-            ],
-            "slug": "youtube",
-            "emoji": "󰗃",
-            "baseUrl": "https://www.youtube.com",
-            "searchPartUrl": "/results?search_query="
-        },
-        {
             "prettyName": "DuckDuckGo",
-            "aliases": [
-                "duckduckgo",
-                "d"
-            ],
-            "aliases_self": [
-                "dd"
-            ],
+            "aliases": ["duckduckgo", "d"],
+            "aliases_self": ["dd"],
             "slug": "duckduckgo",
             "emoji": "󰇥",
             "baseUrl": "https://duckduckgo.com",
@@ -30,27 +11,26 @@
         },
         {
             "prettyName": "Google",
-            "aliases": [
-                "google",
-                "g"
-            ],
-            "aliases_self": [
-                "gg"
-            ],
+            "aliases": ["google", "g"],
+            "aliases_self": ["gg"],
             "slug": "google",
             "emoji": "",
             "baseUrl": "https://www.google.com",
             "searchPartUrl": "/search?q="
         },
         {
+            "prettyName": "Bing",
+            "aliases": ["bing", "b"],
+            "aliases_self": ["bb"],
+            "slug": "bing",
+            "emoji": "󰂤",
+            "baseUrl": "https://www.bing.com",
+            "searchPartUrl": "/search?q="
+        },
+        {
             "prettyName": "Wikipedia",
-            "aliases": [
-                "wikipedia",
-                "w"
-            ],
-            "aliases_self": [
-                "ww"
-            ],
+            "aliases": ["wikipedia", "w"],
+            "aliases_self": ["ww"],
             "slug": "wikipedia",
             "emoji": "󰖬",
             "baseUrl": "https://en.wikipedia.org",
@@ -58,17 +38,57 @@
         },
         {
             "prettyName": "Arch Linux Wiki",
-            "aliases": [
-                "archlinux",
-                "a"
-            ],
-            "aliases_self": [
-                "aa"
-            ],
+            "aliases": ["archlinux", "a"],
+            "aliases_self": ["aa"],
             "slug": "arch_linux_wiki",
             "emoji": "󰣇",
             "baseUrl": "https://wiki.archlinux.org",
             "searchPartUrl": "/index.php?search="
+        },
+        {
+            "prettyName": "Man Pages",
+            "aliases": ["man", "m"],
+            "aliases_self": ["mm"],
+            "slug": "man_pages",
+            "emoji": "󰣇",
+            "baseUrl": "https://man.archlinux.org",
+            "searchPartUrl": "/search?go=Go&q="
+        },
+        {
+            "prettyName": "NixOS Search",
+            "aliases": ["nixos", "n"],
+            "aliases_self": ["nn"],
+            "slug": "nixos_search",
+            "emoji": "󱄅",
+            "baseUrl": "https://search.nixos.org/packages",
+            "searchPartUrl": "?query="
+        },
+        {
+            "prettyName": "YouTube",
+            "aliases": ["youtube", "y"],
+            "aliases_self": ["yy"],
+            "slug": "youtube",
+            "emoji": "󰗃",
+            "baseUrl": "https://www.youtube.com",
+            "searchPartUrl": "/results?search_query="
+        },
+        {
+            "prettyName": "Twitter",
+            "aliases": ["twitter", "t"],
+            "aliases_self": ["tt"],
+            "slug": "twitter",
+            "emoji": "",
+            "baseUrl": "https://www.twitter.com",
+            "searchPartUrl": "/search?q="
+        },
+        {
+            "prettyName": "Reddit",
+            "aliases": ["reddit", "r"],
+            "aliases_self": ["rr"],
+            "slug": "reddit",
+            "emoji": "",
+            "baseUrl": "https://www.reddit.com",
+            "searchPartUrl": "/search?q="
         }
     ]
 }

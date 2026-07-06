@@ -60,9 +60,10 @@ function searchHelp(searchTUICommand, directSearchCommands) {
             maxLength[i] = Math.max(maxLength[i], str.length);
         });
     });
-    rows.forEach((row) => {
+    rows.forEach((row, rowIdx) => {
+        const padChar = rowIdx === 1 ? "-" : " ";
         row.forEach((str, i) => {
-            row[i] = str.padEnd(maxLength[i], " ");
+            row[i] = str.padEnd(maxLength[i], padChar);
         });
     });
 
