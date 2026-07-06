@@ -69,12 +69,24 @@ export function initiateEngines(searchEngines) {
             name: engine.slug,
             aliases: engine.aliases,
             description: engine.description,
+            category: "searchEngine",
+            searchTarget: "blank",
+            searchEngine: {
+                slug: engine.slug,
+                prettyName: engine.prettyName,
+            },
             command: (args) => engine.search_blank(args),
         });
         commandRegistry.push({
             name: engine.slug + "_self",
             aliases: engine.aliases_self,
             description: engine.description,
+            category: "searchEngine",
+            searchTarget: "self",
+            searchEngine: {
+                slug: engine.slug,
+                prettyName: engine.prettyName,
+            },
             command: (args) => engine.search_self(args),
         });
     });
