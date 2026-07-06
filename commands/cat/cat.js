@@ -3,8 +3,8 @@ import { make } from "/jsUtils/injectionUtil.js";
 
 const anchors = [];
 
-export function cat({ wrapper, argumentTokens, bigState, input } = {}) {
-    const state = bigState.getProxy();
+export function cat({ wrapper, argumentTokens, stateStore, input } = {}) {
+    const state = stateStore.getState();
     anchors.length = 0;
     let columns = [],
         colIdx = 0,

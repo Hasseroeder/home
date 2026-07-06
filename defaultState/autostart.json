@@ -1,0 +1,7 @@
+{
+    "autorun": [
+        "updateFingerprinting",
+        "fastfetch",
+        "cat links.txt | column"
+    ]
+}

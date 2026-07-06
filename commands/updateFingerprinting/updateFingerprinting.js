@@ -1,7 +1,7 @@
 import { Prompt } from "/lineUtil.js";
 
-export function updateFingerprinting({ bigState } = {}) {
-    const state = bigState.getProxy();
+export function updateFingerprinting({ stateStore } = {}) {
+    const state = stateStore.getState();
     const fp = {
         ...bowser.getParser(window.navigator.userAgent).parsedResult,
         language: navigator.language || navigator.userLanguage,

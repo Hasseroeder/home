@@ -1,11 +1,27 @@
 import { make } from "/jsUtils/injectionUtil.js";
+import { Line } from "/lineUtil.js";
 
-export function nano({ input, bigState } = {}) {
+export function nano({ input, stateStore, argumentTokens, wrapper } = {}) {
+    const requestedFile = argumentTokens?.[0];
+    const fileName = stateStore.resolveFileName(requestedFile);
+
+    if (!fileName) {
+        const files = stateStore.listFiles().join(", ");
+        wrapper?.append(
+            new Line({
+                textContent: requestedFile
+                    ? `${requestedFile} - No such file. Editable files: ${files}`
+                    : `usage: nano <file>. Editable files: ${files}`,
+            }),
+        );
+        return;
+    }
+
     const overlay = make("div", { className: "state-editor-overlay" });
     const modal = make("div", { className: "state-editor-modal" });
     const textarea = make("textarea", {
         className: "state-editor-textarea",
-        value: bigState.exportJSON(),
+        value: stateStore.readFileJSON(fileName),
     });
     const btnSave = make("button", { textContent: "(ctrl + s) Save" });
     const btnCancel = make("button", { textContent: "(esc) Cancel" });
@@ -19,7 +35,7 @@ export function nano({ input, bigState } = {}) {
     btnCancel.addEventListener("click", close);
 
     btnSave.addEventListener("click", () => {
-        const ok = bigState.importJSON(textarea.value);
+        const ok = stateStore.writeFileJSON(fileName, textarea.value);
         if (!ok) {
             alert("Invalid JSON — not saved.");
             return;
@@ -29,11 +45,11 @@ export function nano({ input, bigState } = {}) {
     });
 
     btnExport.addEventListener("click", () => {
-        const blob = new Blob([bigState.exportJSON()], {
+        const blob = new Blob([stateStore.readFileJSON(fileName)], {
             type: "application/json",
         });
         const url = URL.createObjectURL(blob);
-        const a = make("a", { href: url, download: "state.json" });
+        const a = make("a", { href: url, download: fileName });
         a.click();
         URL.revokeObjectURL(url);
     });

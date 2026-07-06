@@ -3,9 +3,30 @@ import { Prompt } from "/lineUtil.js";
 import { commandRegistry, initiateEngines } from "/commands/commands.js";
 import { createStateManager } from "/jsUtils/stateManager.js";
 
-const bigState = createStateManager("app_state", "/defaultState.json");
-await bigState.init();
-const state = bigState.getProxy();
+const stateStore = createStateManager("app_state", {
+    "autostart.json": {
+        path: "/defaultState/autostart.json",
+        keys: ["autorun"],
+    },
+    "profile.json": {
+        path: "/defaultState/profile.json",
+        keys: ["userName", "hostName"],
+    },
+    "search.json": {
+        path: "/defaultState/search.json",
+        keys: ["searchEngines"],
+    },
+    "links.json": {
+        path: "/defaultState/links.json",
+        keys: ["cattableFiles"],
+    },
+    "fastfetch.json": {
+        path: "/defaultState/fastfetch.json",
+        keys: ["fetchModules"],
+    },
+});
+await stateStore.init();
+const state = stateStore.getState();
 state.IANApromise = fetch("https://data.iana.org/TLD/tlds-alpha-by-domain.txt");
 
 const bodyWrapper = document.querySelector(".body-wrapper");
@@ -94,7 +115,7 @@ async function runCommand(CMD) {
     commandObj?.command({
         wrapper: history,
         input,
-        bigState,
+        stateStore,
         argumentTokens: args,
         commandRegistry,
     });

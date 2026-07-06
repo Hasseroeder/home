@@ -38,14 +38,15 @@ export const commandRegistry = [
     {
         name: "nano",
         aliases: ["nano", "vi", "vim", "config", "edit"],
-        description: "open JSON state editor",
+        description: "open a JSON state file editor (example: nano fastfetch.json)",
         command: nano,
     },
     {
         name: "reset",
         aliases: ["reset"],
-        description: "restore persistent state to default and reload",
-        command: ({ bigState }) => bigState.reset(),
+        description: "restore all state (or one JSON state file) to default and reload",
+        command: ({ stateStore, argumentTokens }) =>
+            stateStore.reset(argumentTokens?.[0]),
     },
     {
         name: "cat",

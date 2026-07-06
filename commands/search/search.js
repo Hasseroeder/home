@@ -2,8 +2,8 @@ import { Line, Prompt } from "/lineUtil.js";
 import { make } from "/jsUtils/injectionUtil.js";
 import { SearchEngine } from "/commands/search/searchEngine.js";
 
-export function search({ wrapper, input, bigState } = {}) {
-    const state = bigState.getProxy();
+export function search({ wrapper, input, stateStore } = {}) {
+    const state = stateStore.getState();
     if (!wrapper) return;
 
     // don't open a second search UI
