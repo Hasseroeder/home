@@ -9,9 +9,10 @@ export function nano({ input, stateStore, argumentTokens, wrapper } = {}) {
         const files = stateStore.listFiles().join(", ");
         wrapper?.append(
             new Line({
-                textContent: requestedFile
-                    ? `${requestedFile} - No such file. Editable files: ${files}`
-                    : `usage: nano <file>. Editable files: ${files}`,
+                textContent: "no such file",
+            }),
+            new Line({
+                textContent: `available files: ${files}`,
             }),
         );
         return;

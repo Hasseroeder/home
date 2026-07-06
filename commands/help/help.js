@@ -34,15 +34,13 @@ function nanoHelp(command, stateStore) {
     ];
 }
 
-function searchHelp(searchCommands) {
-    if (!searchCommands.length) return [];
-
+function searchHelp(searchTUICommand, directSearchCommands) {
     const rows = [
         ["Engine", "open in _blank", "open in _self"],
         ["------", "--------------", "-------------"],
     ];
 
-    searchCommands.forEach((command) => {
+    directSearchCommands.forEach((command) => {
         const slug = command.searchEngine?.slug ?? "unknown";
         const prettyName = command.searchEngine?.prettyName ?? slug;
         let commandRow = rows.find((row) => row[0] === prettyName);
@@ -69,14 +67,27 @@ function searchHelp(searchCommands) {
     });
 
     return [
-        new Line({ textContent: "Direct Search Commands:" }),
+        new Line({
+            textContent: searchTUICommand.name,
+        }),
+        new Line({
+            textContent: `  description:  ${searchTUICommand.description}`,
+        }),
+        new Line({
+            textContent: `  aliases:      ${searchTUICommand.aliases.join(", ")}`,
+        }),
+        new Line(),
+        new Line({ textContent: "direct search commands:" }),
         ...rows.map((row) => new Line({ textContent: "  " + row.join(" | ") })),
     ];
 }
 
 export function help({ wrapper, commandRegistry, stateStore } = {}) {
-    const searchCommands = commandRegistry.filter(
+    const directSearchCommands = commandRegistry.filter(
         (command) => command.category === "searchEngine",
+    );
+    const searchTUICommand = commandRegistry.find(
+        (command) => command.name === "searchTUI",
     );
     const nanoCommand = commandRegistry.find(
         (command) => command.name === "nano",
@@ -88,6 +99,6 @@ export function help({ wrapper, commandRegistry, stateStore } = {}) {
     wrapper.append(
         ...commandLines(regularCommands),
         ...nanoHelp(nanoCommand, stateStore),
-        ...searchHelp(searchCommands),
+        ...searchHelp(searchTUICommand, directSearchCommands),
     );
 }

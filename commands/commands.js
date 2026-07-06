@@ -57,10 +57,11 @@ export const commandRegistry = [
         command: cat,
     },
     {
-        name: "search",
-        aliases: ["search", "s", "!"],
+        name: "searchTUI",
+        aliases: ["searchTUI", "search", "s", "!"],
         description: "open fake TUI search",
         command: search,
+        customHelp: true,
     },
 ];
 
