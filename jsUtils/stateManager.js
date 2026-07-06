@@ -18,43 +18,14 @@ function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
-function storageKeyFor(prefix, fileName) {
-    return `${prefix}:${fileName}`;
-}
-
-function normalizeConfigEntry(fileName, entry) {
-    if (typeof entry === "string") {
-        return { fileName, path: entry, keys: [] };
-    }
-    return { fileName, keys: [], ...entry };
-}
-
-function pickKeys(source, keys) {
-    return Object.fromEntries(
-        keys.filter((key) => key in source).map((key) => [key, source[key]]),
-    );
-}
-
-export function createStateManager(storagePrefix, configManifest) {
+export function createStateManager(configManifest) {
     let _files = {}; // saved to localStorage, keyed by editable file name
     let _defaultFiles = {};
     let _runtime = {}; // transient, never saved
 
-    const fileEntries = Object.entries(configManifest).map(
-        ([fileName, entry]) => normalizeConfigEntry(fileName, entry),
-    );
-    const keyToFileName = new Map(
-        fileEntries.flatMap(({ fileName, keys }) =>
-            keys.map((key) => [key, fileName]),
-        ),
-    );
-
     function saveFile(fileName) {
         try {
-            localStorage.setItem(
-                storageKeyFor(storagePrefix, fileName),
-                JSON.stringify(_files[fileName]),
-            );
+            localStorage.setItem(fileName, JSON.stringify(_files[fileName]));
         } catch (err) {
             console.error(`Failed to save state (${fileName}):`, err);
         }
@@ -65,13 +36,12 @@ export function createStateManager(storagePrefix, configManifest) {
         _files = {};
 
         await Promise.all(
-            fileEntries.map(async ({ fileName, path }) => {
+            configManifest.map(async (path) => {
+                const fileName = path.split("/").pop();
                 const defaultState = await loadJson(path);
                 _defaultFiles[fileName] = defaultState;
 
-                const stored = localStorage.getItem(
-                    storageKeyFor(storagePrefix, fileName),
-                );
+                const stored = localStorage.getItem(fileName);
                 if (stored) {
                     try {
                         const overrides = JSON.parse(stored);
@@ -88,30 +58,7 @@ export function createStateManager(storagePrefix, configManifest) {
             }),
         );
 
-        migrateLegacyState();
         _runtime = {};
-    }
-
-    function migrateLegacyState() {
-        const legacyStored = localStorage.getItem(storagePrefix);
-        if (!legacyStored) return;
-
-        try {
-            const legacy = JSON.parse(legacyStored);
-            for (const { fileName, keys } of fileEntries) {
-                _files[fileName] = deepMerge(
-                    _files[fileName],
-                    pickKeys(legacy, keys),
-                );
-                saveFile(fileName);
-            }
-            localStorage.removeItem(storagePrefix);
-        } catch (err) {
-            console.error(
-                `Failed to migrate legacy state (${storagePrefix}):`,
-                err,
-            );
-        }
     }
 
     function combinedPersistentState() {
@@ -124,7 +71,7 @@ export function createStateManager(storagePrefix, configManifest) {
             {
                 get(_, prop) {
                     if (prop in _runtime) return _runtime[prop];
-                    return combinedPersistentState()?.[prop];
+                    return combinedPersistentState()[prop];
                 },
                 set(_, prop, value) {
                     _runtime[prop] = value;
@@ -135,30 +82,27 @@ export function createStateManager(storagePrefix, configManifest) {
     }
 
     function listFiles() {
-        return fileEntries.map(({ fileName }) => fileName);
+        return configManifest.map((path) => path.split("/").pop());
     }
 
     function resolveFileName(fileName) {
-        if (!fileName) return null;
-        const exact = listFiles().find((name) => name === fileName);
-        if (exact) return exact;
-        return listFiles().find(
-            (name) => name.replace(/\.json$/, "") === fileName,
-        );
+        return listFiles().find((name) => {
+            const lowerName = name?.toLowerCase() ?? "";
+            const lowerFileName = fileName?.toLowerCase() ?? "";
+            return (
+                lowerName === lowerFileName ||
+                lowerName.replace(/\.json$/, "") === lowerFileName
+            );
+        });
     }
 
     function readFileJSON(fileName) {
         const normalized = resolveFileName(fileName);
-        const state = normalized
-            ? _files[normalized]
-            : combinedPersistentState();
-        return JSON.stringify(state || {}, null, 2);
+        return JSON.stringify(_files[normalized] || {}, null, 2);
     }
 
     function writeFileJSON(fileName, jsonStr) {
         const normalized = resolveFileName(fileName);
-        if (!normalized) return false;
-
         try {
             _files[normalized] = JSON.parse(jsonStr);
             saveFile(normalized);
@@ -205,6 +149,5 @@ export function createStateManager(storagePrefix, configManifest) {
         readFileJSON,
         writeFileJSON,
         reset,
-        importJSON: (jsonStr, fileName) => writeFileJSON(fileName, jsonStr),
     };
 }

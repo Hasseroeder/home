@@ -3,31 +3,16 @@ import { Prompt } from "/lineUtil.js";
 import { commandRegistry, initiateEngines } from "/commands/commands.js";
 import { createStateManager } from "/jsUtils/stateManager.js";
 
-const stateStore = createStateManager("app_state", {
-    "autostart.json": {
-        path: "/defaultState/autostart.json",
-        keys: ["autorun"],
-    },
-    "profile.json": {
-        path: "/defaultState/profile.json",
-        keys: ["userName", "hostName"],
-    },
-    "search.json": {
-        path: "/defaultState/search.json",
-        keys: ["searchEngines"],
-    },
-    "links.json": {
-        path: "/defaultState/links.json",
-        keys: ["cattableFiles"],
-    },
-    "fastfetch.json": {
-        path: "/defaultState/fastfetch.json",
-        keys: ["fetchModules"],
-    },
-});
+const stateStore = createStateManager([
+    "/defaultState/autorun.json",
+    "/defaultState/profile.json",
+    "/defaultState/searchEngines.json",
+    "/defaultState/cattableFiles.json",
+    "/defaultState/fetchModules.json",
+    "/defaultState/iana.json",
+]);
 await stateStore.init();
 const state = stateStore.getState();
-state.IANApromise = fetch("https://data.iana.org/TLD/tlds-alpha-by-domain.txt");
 
 const bodyWrapper = document.querySelector(".body-wrapper");
 const history = document.querySelector(".command-history");
@@ -109,22 +94,17 @@ async function runCommand(CMD) {
 
     history.append(new Prompt({ hostName: state?.hostName, command: CMD }).el);
 
-    const [name, ...args] = CMD.split(/\s+/);
+    const [name, ...argumentTokens] = CMD.split(/\s+/);
 
     const commandObj = commandRegistry.find((c) => c.aliases.includes(name));
     commandObj?.command({
         wrapper: history,
         input,
         stateStore,
-        argumentTokens: args,
+        argumentTokens,
         commandRegistry,
     });
     if (!commandObj) {
-        if (!state.TLDs)
-            await state.IANApromise.then((r) => r.text())
-                .then((txt) => txt.split(/\r?\n/).slice(1, -1))
-                .then((lines) => (state.TLDs = lines));
-
         const cmd = CMD.toLowerCase();
         const tlds = state.TLDs.map((TLD) => TLD.toLowerCase());
         const tld = tlds.find((tld) => cmd.includes(`.${tld}`));
