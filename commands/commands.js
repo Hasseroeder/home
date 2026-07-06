@@ -37,10 +37,11 @@ export const commandRegistry = [
     },
     {
         name: "nano",
-        aliases: ["nano", "vi", "vim", "config", "edit"],
+        aliases: ["nano", "vi", "vim"],
         description:
             "open a JSON state file editor for personalizing app state",
         command: nano,
+        customHelp: true,
     },
     {
         name: "reset",
