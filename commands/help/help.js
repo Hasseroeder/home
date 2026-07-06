@@ -1,38 +1,40 @@
 import { Line } from "/lineUtil.js";
 
-function aliasesCell(aliases = []) {
-    return `[ ${aliases.join(", ")} ]`;
-}
-
 function commandLines(commands) {
     return commands.flatMap((command) => [
         new Line({
             textContent: command.name,
         }),
         new Line({
-            textContent: `  ${command.description}`,
+            textContent: `  description:  ${command.description}`,
         }),
         new Line({
-            textContent: `  ${aliasesCell(command.aliases)}`,
+            textContent: `  aliases:      ${command.aliases.join(", ")}`,
         }),
+        new Line(),
     ]);
 }
 
-function editableJsonLines(stateStore) {
+function nanoHelp(command, stateStore) {
     const files = stateStore?.listFiles?.() ?? [];
-    if (!files.length) return [];
-
     return [
-        new Line({ textContent: "Editable JSON Files:" }),
-        new Line({ textContent: "  usage: nano <file>.json" }),
-        ...files.map(
-            (fileName) => new Line({ textContent: `  - ${fileName}` }),
-        ),
+        new Line({
+            textContent: command.name,
+        }),
+        new Line({
+            textContent: `  description:     ${command.description}`,
+        }),
+        new Line({
+            textContent: `  aliases:         ${command.aliases.join(", ")}`,
+        }),
+        new Line({
+            textContent: `  editable files:  ${files.join(", ")}`,
+        }),
         new Line(),
     ];
 }
 
-function directSearchLines(searchCommands) {
+function searchHelp(searchCommands) {
     if (!searchCommands.length) return [];
 
     const rows = [
@@ -49,9 +51,9 @@ function directSearchLines(searchCommands) {
             rows.push(commandRow);
         }
         if (command.searchTarget === "blank")
-            commandRow[1] = aliasesCell(command.aliases);
+            commandRow[1] = command.aliases.join(", ");
         else if (command.searchTarget === "self")
-            commandRow[2] = aliasesCell(command.aliases);
+            commandRow[2] = command.aliases.join(", ");
     });
 
     let maxLength = [0, 0, 0];
@@ -76,16 +78,16 @@ export function help({ wrapper, commandRegistry, stateStore } = {}) {
     const searchCommands = commandRegistry.filter(
         (command) => command.category === "searchEngine",
     );
+    const nanoCommand = commandRegistry.find(
+        (command) => command.name === "nano",
+    );
     const regularCommands = commandRegistry.filter(
-        (command) => command.category !== "searchEngine",
+        (command) => !command.customHelp,
     );
 
     wrapper.append(
-        new Line(),
         ...commandLines(regularCommands),
-        new Line(),
-        ...editableJsonLines(stateStore),
-        ...directSearchLines(searchCommands),
-        new Line(),
+        ...nanoHelp(nanoCommand, stateStore),
+        ...searchHelp(searchCommands),
     );
 }

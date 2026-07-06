@@ -17,7 +17,6 @@ export class SearchEngine {
         this.baseUrl = baseUrl;
         this.prettyName = prettyName;
         this.searchPartUrl = searchPartUrl;
-        this.description = `search ${this.prettyName} for results`;
     }
     wrapQuery(q) {
         let urlConstruction = this.baseUrl;

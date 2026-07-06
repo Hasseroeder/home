@@ -38,13 +38,15 @@ export const commandRegistry = [
     {
         name: "nano",
         aliases: ["nano", "vi", "vim", "config", "edit"],
-        description: "open a JSON state file editor (example: nano fastfetch.json)",
+        description:
+            "open a JSON state file editor for personalizing app state",
         command: nano,
     },
     {
         name: "reset",
-        aliases: ["reset"],
-        description: "restore all state (or one JSON state file) to default and reload",
+        aliases: ["reset [filename]"],
+        description:
+            "restore all state (or one JSON state file) to default and reload",
         command: ({ stateStore, argumentTokens }) =>
             stateStore.reset(argumentTokens?.[0]),
     },
@@ -66,9 +68,8 @@ export function initiateEngines(searchEngines) {
     const engines = searchEngines.map((config) => new SearchEngine(config));
     engines.forEach((engine) => {
         commandRegistry.push({
-            name: engine.slug,
+            customHelp: true,
             aliases: engine.aliases,
-            description: engine.description,
             category: "searchEngine",
             searchTarget: "blank",
             searchEngine: {
@@ -78,9 +79,8 @@ export function initiateEngines(searchEngines) {
             command: (args) => engine.search_blank(args),
         });
         commandRegistry.push({
-            name: engine.slug + "_self",
+            customHelp: true,
             aliases: engine.aliases_self,
-            description: engine.description,
             category: "searchEngine",
             searchTarget: "self",
             searchEngine: {
