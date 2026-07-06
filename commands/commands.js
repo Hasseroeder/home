@@ -45,7 +45,7 @@ export const commandRegistry = [
     },
     {
         name: "reset",
-        aliases: ["reset [filename]"],
+        aliases: ["reset"],
         description:
             "restore all state (or one JSON state file) to default and reload",
         command: ({ stateStore, argumentTokens }) =>
