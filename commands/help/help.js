@@ -39,47 +39,36 @@ function directSearchLines(searchCommands) {
         ["Engine", "open in _blank", "open in _self"],
         ["------", "--------------", "-------------"],
     ];
-    let longestEngineName = rows[0][0].length;
-    let longestBlankAliases = rows[0][1].length;
-    let longestSelfAliases = rows[0][2].length;
 
     searchCommands.forEach((command) => {
         const slug = command.searchEngine?.slug ?? "unknown";
         const prettyName = command.searchEngine?.prettyName ?? slug;
-        longestEngineName = Math.max(longestEngineName, prettyName.length);
         let commandRow = rows.find((row) => row[0] === prettyName);
         if (!commandRow) {
             commandRow = [prettyName, "", ""];
             rows.push(commandRow);
         }
-        if (command.searchTarget === "blank") {
+        if (command.searchTarget === "blank")
             commandRow[1] = aliasesCell(command.aliases);
-            longestBlankAliases = Math.max(
-                longestBlankAliases,
-                commandRow[1].length,
-            );
-        } else if (command.searchTarget === "self") {
+        else if (command.searchTarget === "self")
             commandRow[2] = aliasesCell(command.aliases);
-            longestSelfAliases = Math.max(
-                longestSelfAliases,
-                commandRow[2].length,
-            );
-        }
     });
 
-    const toOutput = rows.map((row, i) => {
-        const padChar = i === 1 ? "-" : " ";
-        return [
-            row[0].padEnd(longestEngineName, padChar),
-            row[1].padEnd(longestBlankAliases, padChar),
-            row[2].padEnd(longestSelfAliases, padChar),
-        ];
+    let maxLength = [0, 0, 0];
+    rows.forEach((row) => {
+        row.forEach((str, i) => {
+            maxLength[i] = Math.max(maxLength[i], str.length);
+        });
     });
+    rows.forEach((row) => {
+        row.forEach((str, i) => {
+            row[i] = str.padEnd(maxLength[i], " ");
+        });
+    });
+
     return [
         new Line({ textContent: "Direct Search Commands:" }),
-        ...toOutput.map(
-            (row) => new Line({ textContent: "  " + row.join(" | ") }),
-        ),
+        ...rows.map((row) => new Line({ textContent: "  " + row.join(" | ") })),
     ];
 }
 
