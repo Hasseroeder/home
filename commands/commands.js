@@ -53,7 +53,8 @@ export const commandRegistry = [
     {
         name: "cat",
         aliases: ["cat"],
-        description: "print cattable file contents",
+        description:
+            "print cattable file contents, optionally piped into column",
         command: cat,
     },
     {
