@@ -97,21 +97,62 @@ async function runCommand(CMD) {
     const [name, ...argumentTokens] = CMD.split(/\s+/);
 
     const commandObj = commandRegistry.find((c) => c.aliases.includes(name));
-    commandObj?.command({
-        wrapper: history,
-        input,
-        stateStore,
-        argumentTokens,
-        commandRegistry,
-    });
-    if (!commandObj) {
-        const cmd = CMD.toLowerCase();
-        const tlds = state.TLDs.map((TLD) => TLD.toLowerCase());
-        const tld = tlds.find((tld) => cmd.includes(`.${tld}`));
-        if (!tld) return;
+    if (commandObj) {
+        commandObj.command({
+            wrapper: history,
+            input,
+            stateStore,
+            argumentTokens,
+            commandRegistry,
+        });
+    } else {
+        const lowerCMD = CMD.toLowerCase();
+        const tlds = state.TLDs.sort((tldA, tldB) => tldB.length - tldA.length);
+        const tld = tlds.find((tld) => lowerCMD.includes(`.${tld}`));
+        function isIPv4(str) {
+            str = str.split("://").at(-1);
+            str = str.split("/")[0];
+            str = str.split(":")[0];
+            str = str.split("?")[0];
+            str = str.split("#")[0];
+            const numberParts = str.split(".").map((part) => {
+                if (part === "") return NaN;
+                return Number(part);
+            });
+            return (
+                numberParts.length === 4 &&
+                numberParts.every((n) => n >= 0 && n <= 255 && !isNaN(n))
+            );
+        }
+        const isValidLatePart = (str) =>
+            str === "" ||
+            str.startsWith("/") ||
+            str.startsWith("?") ||
+            str.startsWith("#") ||
+            str.startsWith(":");
 
-        if (CMD.includes("://")) window.open(CMD);
-        else window.open("http://" + CMD);
+        if (tld) {
+            const latePart = lowerCMD.split(`.${tld}`).at(-1);
+            const valid = isValidLatePart(latePart);
+            if (valid) {
+                if (!CMD.includes("://")) CMD = "http://" + CMD;
+                window.open(CMD);
+            }
+        } else if (lowerCMD.includes("localhost")) {
+            const latePart = lowerCMD.split("localhost").at(-1);
+            const valid = isValidLatePart(latePart);
+            if (valid) {
+                if (!CMD.includes("://")) CMD = "http://" + CMD;
+                window.open(CMD);
+            }
+        } else if (isIPv4(lowerCMD)) {
+            const latePart = lowerCMD.split(".").slice(4).join(".");
+            const valid = isValidLatePart(latePart);
+            if (valid) {
+                if (!CMD.includes("://")) CMD = "http://" + CMD;
+                window.open(CMD);
+            }
+        } /* I do not care for IPv6 */
     }
 
     input.scrollIntoView();

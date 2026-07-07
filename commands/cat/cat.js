@@ -96,7 +96,7 @@ export function cat({ wrapper, argumentTokens, stateStore, input } = {}) {
                 href: entry.href,
                 textContent: entry.text || "",
             });
-            a.className = "cat-link";
+            a.classList.add("cat-link");
             anchors.push(a);
             if (typeof currentCol === "number") {
                 columns[currentCol] = columns[currentCol] || [];
