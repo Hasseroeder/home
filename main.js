@@ -1,7 +1,12 @@
 import { make } from "/jsUtils/injectionUtil.js";
 import { Prompt } from "/lineUtil.js";
-import { commandRegistry, initiateEngines } from "/commands/commands.js";
+import {
+    commandRegistry,
+    initiateEngines,
+    initiateLinks,
+} from "/commands/commands.js";
 import { createStateManager } from "/jsUtils/stateManager.js";
+import { loadJson } from "/jsUtils/jsonUtil.js";
 
 const stateStore = createStateManager([
     "/defaultState/autorun.json",
@@ -10,6 +15,7 @@ const stateStore = createStateManager([
     "/defaultState/cattableFiles.json",
     "/defaultState/fetchModules.json",
     "/defaultState/iana.json",
+    "/defaultState/links.json",
 ]);
 await stateStore.init();
 const state = stateStore.getState();
@@ -96,7 +102,11 @@ async function runCommand(CMD) {
 
     const [name, ...argumentTokens] = CMD.split(/\s+/);
 
-    const commandObj = commandRegistry.find((c) => c.aliases.includes(name));
+    const commandObj = commandRegistry.find((c) => {
+        const lowerAliases = c.aliases.map((alias) => alias.toLowerCase());
+        const lowerName = name.toLowerCase();
+        return lowerAliases.includes(lowerName);
+    });
     if (commandObj) {
         commandObj.command({
             wrapper: history,
@@ -168,5 +178,6 @@ bodyWrapper.append(
 );
 input.addEventListener("keydown", handleInputKeyDown);
 initiateEngines(state.searchEngines ?? []);
+initiateLinks(state.links ?? []);
 state.autorun.forEach(await runCommand);
 input.focus();

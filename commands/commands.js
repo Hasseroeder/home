@@ -94,3 +94,13 @@ export function initiateEngines(searchEngines) {
         });
     });
 }
+
+export const initiateLinks = (links) =>
+    links.forEach((link) => {
+        commandRegistry.push({
+            customHelp: true,
+            aliases: link.aliases,
+            category: "links",
+            command: () => window.open(link.url),
+        });
+    });

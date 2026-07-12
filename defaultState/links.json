@@ -1,3 +1,573 @@
 {
-    "links": {}
+    "links": [
+        {
+            "aliases": ["gpt", "chatgpt"],
+            "url": "https://chatgpt.com"
+        },
+        {
+            "aliases": ["deepseek"],
+            "url": "https://chat.deepseek.com/"
+        },
+        {
+            "aliases": ["copilot"],
+            "url": "https://copilot.microsoft.com/"
+        },
+        {
+            "aliases": ["claude", "anthropic"],
+            "url": "https://claude.ai/"
+        },
+        {
+            "aliases": ["grok", "askelon"],
+            "url": "https://grok.com/"
+        },
+        {
+            "aliases": ["codex"],
+            "url": "https://chatgpt.com/codex/cloud"
+        },
+        {
+            "aliases": ["git", "github"],
+            "url": "https://github.com"
+        },
+        {
+            "aliases": ["discord"],
+            "url": "https://discord.com/channels/@me"
+        },
+        {
+            "aliases": ["manga", "mangadex"],
+            "url": "https://mangadex.org/"
+        },
+        {
+            "aliases": ["royal", "royalroad"],
+            "url": "https://www.royalroad.com/home"
+        },
+        {
+            "aliases": ["pin", "pinterest"],
+            "url": "https://uk.pinterest.com/"
+        },
+        {
+            "aliases": ["band", "bandcamp"],
+            "url": "https://bandcamp.com/"
+        },
+        {
+            "aliases": ["sound", "soundcloud"],
+            "url": "https://soundcloud.com/"
+        },
+        {
+            "aliases": ["music"],
+            "url": "https://music.youtube.com/"
+        },
+        {
+            "aliases": ["chess"],
+            "url": "https://www.chess.com/"
+        },
+        {
+            "aliases": ["lichess"],
+            "url": "https://lichess.org/"
+        },
+        {
+            "aliases": ["newyork", "nytimes"],
+            "url": "https://www.nytimes.com"
+        },
+        {
+            "aliases": ["wordle"],
+            "url": "https://www.nytimes.com/games/wordle/"
+        },
+        {
+            "aliases": ["connections"],
+            "url": "https://www.nytimes.com/games/connections"
+        },
+        {
+            "aliases": ["sudoku"],
+            "url": "https://www.nytimes.com/puzzles/sudoku"
+        },
+        {
+            "aliases": ["strands"],
+            "url": "https://www.nytimes.com/games/strands"
+        },
+        {
+            "aliases": ["pips"],
+            "url": "https://www.nytimes.com/games/pips"
+        },
+        {
+            "aliases": ["4chan"],
+            "url": "https://4chan.org/"
+        },
+        {
+            "aliases": ["wg"],
+            "url": "https://boards.4chan.org/wg/catalog"
+        },
+        {
+            "aliases": ["bluesky", "bsky"],
+            "url": "https://bsky.app/"
+        },
+        {
+            "aliases": ["anna", "hyenamommy"],
+            "url": "https://bsky.app/profile/hyenamommy.bsky.social"
+        },
+        {
+            "aliases": ["ty", "puppydaughter"],
+            "url": "https://bsky.app/profile/puppydaughter.bsky.social"
+        },
+        {
+            "aliases": ["pisspuppet"],
+            "url": "https://bsky.app/profile/pisspuppet.bsky.social"
+        },
+        {
+            "aliases": ["nyazsche", "nyazshe"],
+            "url": "https://bsky.app/profile/nyazsche.bsky.social"
+        },
+        {
+            "aliases": ["sheets", "gsheets"],
+            "url": "https://docs.google.com/"
+        },
+        {
+            "aliases": ["todo", "todoList"],
+            "url": "https://docs.google.com/spreadsheets/d/1GMmOfGecDvzkK2NKv8Hc2iFOYlCIAwVM1c_nGfZ5Lvk/"
+        },
+        {
+            "aliases": ["obw"],
+            "url": "https://owobot.fandom.com/wiki/OwO_Bot_Wiki"
+        },
+        {
+            "aliases": ["overleaf", "latex"],
+            "url": "https://www.overleaf.com/"
+        },
+        {
+            "aliases": ["anydice", "dice"],
+            "url": "https://anydice.com/"
+        },
+        {
+            "aliases": ["dotfiles", ".files"],
+            "url": "https://github.com/Hasseroeder/dotfiles"
+        },
+        {
+            "aliases": ["chezmoi"],
+            "url": "https://www.chezmoi.io/"
+        },
+        {
+            "aliases": ["syncthing"],
+            "url": "https://docs.syncthing.net/"
+        },
+        {
+            "aliases": ["pi1"],
+            "url": "https://pi1:8384/"
+        },
+        {
+            "aliases": ["arch", "archwiki"],
+            "url": "https://wiki.archlinux.org/"
+        },
+        {
+            "aliases": ["fetchDocs"],
+            "url": "https://github.com/fastfetch-cli/fastfetch/blob/dev/doc/json_schema.json"
+        },
+        {
+            "aliases": ["awesome"],
+            "url": "https://github.com/sindresorhus/awesome#readme"
+        },
+        {
+            "aliases": ["cloudflare"],
+            "url": "https://dash.cloudflare.com/"
+        },
+        {
+            "aliases": ["pandadaskissen", "panda"],
+            "url": "https://github.com/PandaDasKissen"
+        },
+        {
+            "aliases": ["hasse", "hasseroeder"],
+            "url": "https://github.com/Hasseroeder"
+        },
+        {
+            "aliases": ["coop", "coopw", "coopw1", "april"],
+            "url": "https://github.com/coopw1"
+        },
+        {
+            "aliases": ["MDN"],
+            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference"
+        },
+        {
+            "aliases": ["chartjs", "chart", "chart.js"],
+            "url": "https://www.chartjs.org/"
+        },
+        {
+            "aliases": ["mathjax"],
+            "url": "https://www.mathjax.org/"
+        },
+        {
+            "aliases": [
+                "mal",
+                "strawpage",
+                "graphic",
+                "graphiclibrary",
+                "graphics",
+                "graphicslibrary"
+            ],
+            "url": "https://malsgraphiclibrary.straw.page/"
+        },
+        {
+            "aliases": ["nerd", "nerdfonts"],
+            "url": "https://www.nerdfonts.com/cheat-sheet"
+        },
+        {
+            "aliases": ["caniuse"],
+            "url": "https://caniuse.com/"
+        },
+        {
+            "aliases": ["5500"],
+            "url": "http://localhost:5500/"
+        },
+        {
+            "aliases": ["8384"],
+            "url": "http://localhost:8384/"
+        },
+        {
+            "aliases": ["3000"],
+            "url": "http://localhost:3000/"
+        },
+        {
+            "aliases": ["4200"],
+            "url": "http://localhost:4200/"
+        },
+        {
+            "aliases": ["5000"],
+            "url": "http://localhost:5000/"
+        },
+        {
+            "aliases": ["5173"],
+            "url": "http://localhost:5173/"
+        },
+        {
+            "aliases": ["5432"],
+            "url": "http://localhost:5432/"
+        },
+        {
+            "aliases": ["6379"],
+            "url": "http://localhost:6379/"
+        },
+        {
+            "aliases": ["8000"],
+            "url": "http://localhost:8000/"
+        },
+        {
+            "aliases": ["8080"],
+            "url": "http://localhost:8080/"
+        },
+        {
+            "aliases": ["8081"],
+            "url": "http://localhost:8081/"
+        },
+        {
+            "aliases": ["8082"],
+            "url": "http://localhost:8082/"
+        },
+        {
+            "aliases": ["8888"],
+            "url": "http://localhost:8888/"
+        },
+        {
+            "aliases": ["9000"],
+            "url": "http://localhost:9000/"
+        },
+        {
+            "aliases": ["9200"],
+            "url": "http://localhost:9200/"
+        },
+        {
+            "aliases": ["transaero", "aerospace", "aero", "space"],
+            "url": "https://transaero.space/"
+        },
+        {
+            "aliases": ["home"],
+            "url": "https://home.transaero.space/"
+        },
+        {
+            "aliases": ["agapanthus"],
+            "url": "https://agapanthus.transaero.space/"
+        },
+        {
+            "aliases": ["basement", "bwep", "owo.bwep"],
+            "url": "https://owo.bwep.net"
+        },
+        {
+            "aliases": ["transfemscience"],
+            "url": "https://transfemscience.org/"
+        },
+        {
+            "aliases": ["papers"],
+            "url": "https://papers.trans.diy/"
+        },
+        {
+            "aliases": ["estrannai"],
+            "url": "https://estrannai.se/"
+        },
+        {
+            "aliases": ["mom"],
+            "url": "https://hrt.mom/how_to"
+        },
+        {
+            "aliases": ["kleinanzeigen"],
+            "url": "https://www.kleinanzeigen.de/"
+        },
+        {
+            "aliases": ["ebay"],
+            "url": "https://ebay.com"
+        },
+        {
+            "aliases": ["amazon"],
+            "url": "https://amazon.com"
+        },
+        {
+            "aliases": ["wikitionary"],
+            "url": "https://www.wiktionary.org/"
+        },
+        {
+            "aliases": [
+                "merriam",
+                "webster",
+                "merriam-webster",
+                "merriamwebster",
+                "dictionary"
+            ],
+            "url": "https://www.merriam-webster.com/"
+        },
+        {
+            "aliases": ["wikisource"],
+            "url": "https://en.wikisource.org/wiki/Main_Page"
+        },
+        {
+            "aliases": ["thesaurus"],
+            "url": "https://www.thesaurus.com/"
+        },
+        {
+            "aliases": ["rhyme", "rhymezone"],
+            "url": "https://www.rhymezone.com/"
+        },
+        {
+            "aliases": ["unixporn"],
+            "url": "https://www.reddit.com/r/unixporn/"
+        },
+        {
+            "aliases": ["extensions", "addons"],
+            "url": "https://addons.mozilla.org/en-US/firefox/extensions/"
+        },
+        {
+            "aliases": ["fritz", "fritzbox"],
+            "url": "http://fritz.box"
+        },
+        {
+            "aliases": ["reolink"],
+            "url": "https://192.168.178.57/"
+        },
+        {
+            "aliases": ["stack", "stackoverflow"],
+            "url": "https://stackoverflow.com"
+        },
+        {
+            "aliases": ["userbenchmark", "benchmark"],
+            "url": "https://userbenchmark.com"
+        },
+        {
+            "aliases": ["gelbooru"],
+            "url": "https://gelbooru.com"
+        },
+        {
+            "aliases": ["konachan"],
+            "url": "https://konachan.net"
+        },
+        {
+            "aliases": ["gmail"],
+            "url": "https://gmail.com"
+        },
+        {
+            "aliases": ["steam"],
+            "url": "https://store.steampowered.com/"
+        },
+        {
+            "aliases": ["serotines"],
+            "url": "https://serotines.bigcartel.com/category/stickers"
+        },
+        {
+            "aliases": ["iana"],
+            "url": "https://www.iana.org/"
+        },
+        {
+            "aliases": ["stackedit", ".md", "md", "markdown"],
+            "url": "https://stackedit.io/app#"
+        },
+        {
+            "aliases": ["etsy"],
+            "url": "https://www.etsy.com"
+        },
+        {
+            "aliases": ["ali", "aliexpress"],
+            "url": "https://www.aliexpress.com"
+        },
+        {
+            "aliases": ["pixiv"],
+            "url": "https://www.pixiv.net"
+        },
+        {
+            "aliases": ["tenor"],
+            "url": "https://tenor.com"
+        },
+        {
+            "aliases": ["geiz", "geizhals"],
+            "url": "https://geizhals.de"
+        },
+        {
+            "aliases": ["noctua"],
+            "url": "https://www.noctua.at"
+        },
+        {
+            "aliases": ["virtualbox"],
+            "url": "https://www.virtualbox.org/"
+        },
+        {
+            "aliases": ["ig", "insta", "instagram"],
+            "url": "https://www.instagram.com"
+        },
+        {
+            "aliases": ["deviant", "deviantart"],
+            "url": "https://www.deviantart.com"
+        },
+        {
+            "aliases": ["patreon"],
+            "url": "https://www.patreon.com"
+        },
+        {
+            "aliases": ["plaza", "plazaone"],
+            "url": "https://plaza.one"
+        },
+        {
+            "aliases": ["protondb"],
+            "url": "https://www.protondb.com"
+        },
+        {
+            "aliases": ["armorgames"],
+            "url": "https://armorgames.com"
+        },
+        {
+            "aliases": ["codewars"],
+            "url": "https://www.codewars.com"
+        },
+        {
+            "aliases": ["faggotville"],
+            "url": "https://faggotville.com"
+        },
+        {
+            "aliases": ["gitlab"],
+            "url": "https://gitlab.com"
+        },
+        {
+            "aliases": ["dev", "docs", "devdocs", "devdocsio"],
+            "url": "https://devdocs.io"
+        },
+        {
+            "aliases": ["overthewire"],
+            "url": "https://overthewire.org"
+        },
+        {
+            "aliases": ["nginx"],
+            "url": "https://docs.nginx.com"
+        },
+        {
+            "aliases": ["exiftool"],
+            "url": "https://exiftool.org/"
+        },
+        {
+            "aliases": ["npm"],
+            "url": "https://www.npmjs.com"
+        },
+        {
+            "aliases": ["wetter"],
+            "url": "https://www.wetter.com/deutschland/rheinsberg/DE0008844.html#diagramm"
+        },
+        {
+            "aliases": ["steamstats", "steamstat"],
+            "url": "https://steamstat.us/"
+        },
+        {
+            "aliases": ["thinkwiki", "thinkpad", "thinkpads"],
+            "url": "https://www.thinkwiki.org"
+        },
+        {
+            "aliases": ["paste", "pastebin"],
+            "url": "https://pastebin.com"
+        },
+        {
+            "aliases": ["node", "nodejs", "node.js"],
+            "url": "https://nodejs.org"
+        },
+        {
+            "aliases": ["linkcleaner"],
+            "url": "https://linkcleaner.app/"
+        },
+        {
+            "aliases": ["face", "fb", "facebook"],
+            "url": "https://www.facebook.com"
+        },
+        {
+            "aliases": ["safebooru"],
+            "url": "https://safebooru.org"
+        },
+        {
+            "aliases": ["walls", "wall", "wallpaper", "wallpapers"],
+            "url": "https://wallhaven.cc"
+        },
+        {
+            "aliases": ["scholar"],
+            "url": "https://scholar.google.com/"
+        },
+        {
+            "aliases": ["archive"],
+            "url": "https:/archive.org"
+        },
+        {
+            "aliases": ["urbandictionary", "urbandict"],
+            "url": "https://www.urbandictionary.com"
+        },
+        {
+            "aliases": ["tiktok"],
+            "url": "https://www.tiktok.com"
+        },
+        {
+            "aliases": ["gptzero", "aidetect", "detectai", "detect"],
+            "url": "https://gptzero.me"
+        },
+        {
+            "aliases": ["paypal"],
+            "url": "https://www.paypal.com/myaccount/summary"
+        },
+        {
+            "aliases": ["sparkasse"],
+            "url": "https://www.sparkasse-opr.de/de/home/onlinebanking/finanzuebersicht.html"
+        },
+        {
+            "aliases": ["ascii", "asciiart"],
+            "url": "https://www.asciiart.eu"
+        },
+        {
+            "aliases": ["omz", "ohmyzsh"],
+            "url": "https://ohmyz.sh"
+        },
+        {
+            "aliases": ["yandere"],
+            "url": "https://yande.re"
+        },
+        {
+            "aliases": ["tumblr"],
+            "url": "https://www.tumblr.com"
+        },
+        {
+            "aliases": ["names", "fantasynames"],
+            "url": "https://www.fantasynamegenerators.com"
+        },
+        {
+            "aliases": ["mal", "myanimelist"],
+            "url": "https://myanimelist.net"
+        },
+        {
+            "aliases": ["liquipedia"],
+            "url": "https://liquipedia.net"
+        }
+    ]
 }
