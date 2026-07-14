@@ -568,6 +568,18 @@
         {
             "aliases": ["liquipedia"],
             "url": "https://liquipedia.net"
+        },
+        {
+            "aliases": ["maps", "gmaps", "googlemaps"],
+            "url": "https://www.google.com/maps/@53.094"
+        },
+        {
+            "aliases": ["translate"],
+            "url": "https://translate.google.com/?sl=de&tl=en&op=translate"
+        },
+        {
+            "aliases": ["deepl"],
+            "url": "https://www.deepl.com/en/translator"
         }
     ]
 }
